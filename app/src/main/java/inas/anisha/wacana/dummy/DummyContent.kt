@@ -1,5 +1,7 @@
 package inas.anisha.wacana.dummy
 
+import inas.anisha.wacana.dataModel.TripDataModel
+import inas.anisha.wacana.ui.TripItemViewModel
 import java.util.*
 
 /**
@@ -13,12 +15,12 @@ object DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    val ITEMS: MutableList<DummyItem> = ArrayList()
+    val ITEMS: MutableList<TripItemViewModel> = ArrayList()
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    val ITEM_MAP: MutableMap<String, DummyItem> = HashMap()
+    val ITEM_MAP: MutableMap<String, TripItemViewModel> = HashMap()
 
     private val COUNT = 25
 
@@ -29,22 +31,19 @@ object DummyContent {
         }
     }
 
-    private fun addItem(item: DummyItem) {
+    private fun addItem(item: TripItemViewModel) {
         ITEMS.add(item)
-        ITEM_MAP.put(item.id, item)
+        ITEM_MAP[item.tripId] = item
     }
 
-    private fun createDummyItem(position: Int): DummyItem {
-        return DummyItem(position.toString(), "Item " + position, makeDetails(position))
-    }
-
-    private fun makeDetails(position: Int): String {
-        val builder = StringBuilder()
-        builder.append("Details about Item: ").append(position)
-        for (i in 0..position - 1) {
-            builder.append("\nMore details information here.")
+    private fun createDummyItem(position: Int): TripItemViewModel {
+        return TripItemViewModel().apply {
+            tripId = "trip_$position"
+            destination = "Singapore"
+            startDate = "Sep 2 2019"
+            endDate = "Sep 5 2019"
+            tripDetail = TripDataModel("Singapore", Calendar.getInstance())
         }
-        return builder.toString()
     }
 
     /**

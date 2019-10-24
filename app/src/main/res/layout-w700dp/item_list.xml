@@ -4,13 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".HomeActivity">
+    tools:context=".ui.HomeActivity">
 
     <!--
     This layout is a two-pane layout for the Items
@@ -24,11 +22,10 @@
         android:name="inas.anisha.wacana.ItemListFragment"
         android:layout_width="@dimen/item_width"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="inas.anisha.wacana.HomeActivity"
-        tools:listitem="@layout/trip_list_content" />
+        tools:context="inas.anisha.wacana.ui.HomeActivity"
+        tools:listitem="@layout/trip_list_item" />
 
     <FrameLayout
         android:id="@+id/trip_detail_container"

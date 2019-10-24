@@ -1,10 +1,12 @@
-package inas.anisha.wacana
+package inas.anisha.wacana.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import inas.anisha.wacana.R
+import inas.anisha.wacana.dataModel.TripDataModel
 import kotlinx.android.synthetic.main.activity_item_detail.*
 
 /**
@@ -42,9 +44,9 @@ class TripDetailActivity : AppCompatActivity() {
             // using a fragment transaction.
             val fragment = TripDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(
+                    putParcelable(
                         TripDetailFragment.ARG_ITEM_ID,
-                        intent.getStringExtra(TripDetailFragment.ARG_ITEM_ID)
+                        intent.getParcelableExtra<TripDataModel>(TripDetailFragment.ARG_ITEM_ID)
                     )
                 }
             }
