@@ -55,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
             DummyContent.ITEMS,
             object : TripRecyclerViewAdapter.OnItemClickListener {
                 override fun onItemClick(tripDetail: TripDataModel) {
+
                     if (twoPane) {
                         val fragment = TripDetailFragment().apply {
                             arguments = Bundle().apply {
@@ -66,6 +67,8 @@ class HomeActivity : AppCompatActivity() {
                             .replace(R.id.trip_detail_container, fragment)
                             .commit()
                     } else {
+//                        val intent = Intent(this@HomeActivity, TripActivity::class.java)
+//                        startActivity(intent)
                         val intent =
                             Intent(this@HomeActivity, TripDetailActivity::class.java).apply {
                                 putExtra(TripDetailFragment.ARG_ITEM_ID, tripDetail)

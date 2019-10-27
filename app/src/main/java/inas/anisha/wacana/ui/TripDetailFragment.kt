@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import inas.anisha.wacana.R
 import inas.anisha.wacana.dataModel.TripDataModel
+import inas.anisha.wacana.ui.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.item_detail.view.*
-import java.util.*
 
 /**
  * A fragment representing a single Item detail screen.
@@ -44,14 +46,14 @@ class TripDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.item_detail, container, false)
-
-        // Show the dummy content as text in a TextView.
-        item?.let {
-            val year = it.startDate.get(Calendar.YEAR)
-            val month =
-                it.startDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH)
-            val day = it.startDate.get(Calendar.DAY_OF_MONTH)
-            rootView.trip_detail_text_view.text = "$day $month $year"
+        requireActivity().let {
+            requireFragmentManager().let { fm ->
+                val sectionsPagerAdapter = SectionsPagerAdapter(it, childFragmentManager)
+                val viewPager: ViewPager = rootView.view_pager
+                viewPager.adapter = sectionsPagerAdapter
+                val tabs: TabLayout = rootView.tabs
+                tabs.setupWithViewPager(viewPager)
+            }
         }
 
         return rootView
