@@ -28,6 +28,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="inas.anisha.wacana.ui.HomeActivity" />
         </activity>
+        <activity
+            android:name=".ui.NewTripActivity"
+            android:label="@string/title_activity_new_trip"
+            android:parentActivityName=".ui.HomeActivity" />
     </application>
 
 </manifest>

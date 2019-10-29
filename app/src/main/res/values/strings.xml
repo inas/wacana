@@ -2,6 +2,7 @@
     <string name="app_name">Wacana</string>
     <string name="title_item_detail">Item Detail</string>
     <string name="title_activity_trip">TripActivity</string>
+    <string name="title_activity_new_trip">Add New Trip</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
 </resources>

@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import inas.anisha.wacana.R
-import inas.anisha.wacana.dataModel.TripDataModel
 import inas.anisha.wacana.databinding.TripListItemBinding
+import inas.anisha.wacana.db.entity.TripEntity
+
 
 class TripRecyclerViewAdapter(
-    private val data: List<TripItemViewModel>,
-    private val clickListener: OnItemClickListener
+    private var data: List<TripItemViewModel>,
+    private var clickListener: OnItemClickListener
 ) :
     RecyclerView.Adapter<TripRecyclerViewAdapter.ViewHolder>() {
 
@@ -26,7 +27,7 @@ class TripRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.viewModel = data[position]
-        holder.itemView.setOnClickListener { clickListener.onItemClick(data[position].tripDetail) }
+        holder.itemView.setOnClickListener { clickListener.onItemClick(data[position].tripEntity) }
     }
 
     inner class ViewHolder(val binding: TripListItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -36,7 +37,11 @@ class TripRecyclerViewAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(tripDetail: TripDataModel)
+        fun onItemClick(tripEntity: TripEntity)
     }
 
+    fun updateList(newData: List<TripItemViewModel>) {
+        data = newData
+        notifyDataSetChanged()
+    }
 }

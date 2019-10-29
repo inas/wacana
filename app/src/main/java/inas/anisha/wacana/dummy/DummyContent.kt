@@ -1,6 +1,5 @@
 package inas.anisha.wacana.dummy
 
-import inas.anisha.wacana.dataModel.TripDataModel
 import inas.anisha.wacana.ui.TripItemViewModel
 import java.util.*
 
@@ -42,7 +41,7 @@ object DummyContent {
             destination = "Singapore"
             startDate = "Sep 2 2019"
             endDate = "Sep 5 2019"
-            tripDetail = TripDataModel("Singapore", Calendar.getInstance())
+//            tripDetail = TripDataModel("Singapore", Calendar.getInstance())
         }
     }
 

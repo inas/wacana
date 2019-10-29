@@ -3,13 +3,14 @@ package inas.anisha.wacana.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import inas.anisha.wacana.R
-import inas.anisha.wacana.dataModel.TripDataModel
-import inas.anisha.wacana.dummy.DummyContent
+import inas.anisha.wacana.databinding.ActivityHomeBinding
+import inas.anisha.wacana.db.entity.TripEntity
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.item_list.*
+import kotlinx.android.synthetic.main.trip_list.*
+import kotlinx.android.synthetic.main.trip_list.view.*
 
 /**
  * An activity representing a list of Pings. This activity
@@ -21,6 +22,9 @@ import kotlinx.android.synthetic.main.item_list.*
  */
 class HomeActivity : AppCompatActivity() {
 
+    lateinit var viewModel: HomeViewModel
+    lateinit var binding: ActivityHomeBinding
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -29,15 +33,11 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home, null)
         setSupportActionBar(toolbar)
         toolbar.title = title
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
         if (trip_detail_container != null) {
             // The detail container view will be present only in the
@@ -47,19 +47,35 @@ class HomeActivity : AppCompatActivity() {
             twoPane = true
         }
 
-        setupRecyclerView(item_list)
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = TripRecyclerViewAdapter(
-            DummyContent.ITEMS,
-            object : TripRecyclerViewAdapter.OnItemClickListener {
-                override fun onItemClick(tripDetail: TripDataModel) {
+    override fun onStart() {
+        super.onStart()
+        setupRecyclerView()
 
+        button_add_trip.setOnClickListener {
+            val intent = Intent(this@HomeActivity, NewTripActivity::class.java)
+            startActivity(intent)
+        }
+
+        viewModel.tripEntity.observe(this, androidx.lifecycle.Observer { tripDataList ->
+            (binding.tripList.item_list.adapter as TripRecyclerViewAdapter).updateList(
+                viewModel.getTripItemVMList(
+                    tripDataList
+                )
+            )
+        })
+    }
+
+    private fun setupRecyclerView() {
+        binding.tripList.item_list.adapter = TripRecyclerViewAdapter(
+            mutableListOf(),
+            object : TripRecyclerViewAdapter.OnItemClickListener {
+                override fun onItemClick(trip: TripEntity) {
                     if (twoPane) {
                         val fragment = TripDetailFragment().apply {
                             arguments = Bundle().apply {
-                                putParcelable(TripDetailFragment.ARG_ITEM_ID, tripDetail)
+                                putParcelable(TripDetailFragment.ARG_ITEM_ID, trip)
                             }
                         }
                         supportFragmentManager
@@ -67,11 +83,9 @@ class HomeActivity : AppCompatActivity() {
                             .replace(R.id.trip_detail_container, fragment)
                             .commit()
                     } else {
-//                        val intent = Intent(this@HomeActivity, TripActivity::class.java)
-//                        startActivity(intent)
                         val intent =
                             Intent(this@HomeActivity, TripDetailActivity::class.java).apply {
-                                putExtra(TripDetailFragment.ARG_ITEM_ID, tripDetail)
+                                putExtra(TripDetailFragment.ARG_ITEM_ID, trip)
                             }
                         startActivity(intent)
                     }

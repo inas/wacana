@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import inas.anisha.wacana.R
-import inas.anisha.wacana.dataModel.TripDataModel
+import inas.anisha.wacana.db.entity.TripEntity
 import inas.anisha.wacana.ui.ui.main.SectionsPagerAdapter
-import kotlinx.android.synthetic.main.activity_item_detail.*
-import kotlinx.android.synthetic.main.item_detail.view.*
+import kotlinx.android.synthetic.main.activity_trip_detail.*
+import kotlinx.android.synthetic.main.trip_detail_tab_layout.view.*
 
 /**
  * A fragment representing a single Item detail screen.
@@ -24,7 +24,7 @@ class TripDetailFragment : Fragment() {
     /**
      * The dummy content this fragment is presenting.
      */
-    private var item: TripDataModel? = null
+    private var item: TripEntity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +34,7 @@ class TripDetailFragment : Fragment() {
                 // Load the dummy content specified by the fragment
                 // arguments. In a real-world scenario, use a Loader
                 // to load content from a content provider.
-                it.getParcelable<TripDataModel>(ARG_ITEM_ID)
-                item = it.getParcelable(ARG_ITEM_ID) as TripDataModel
+                item = it.getParcelable(ARG_ITEM_ID) as TripEntity
                 activity?.toolbar_layout?.title = item?.destination
             }
         }
@@ -45,7 +44,7 @@ class TripDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.item_detail, container, false)
+        val rootView = inflater.inflate(R.layout.trip_detail_tab_layout, container, false)
         requireActivity().let {
             requireFragmentManager().let { fm ->
                 val sectionsPagerAdapter = SectionsPagerAdapter(it, childFragmentManager)

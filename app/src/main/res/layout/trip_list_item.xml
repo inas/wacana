@@ -2,7 +2,6 @@
 <layout>
 
     <data>
-
         <variable
             name="viewModel"
             type="inas.anisha.wacana.ui.TripItemViewModel" />

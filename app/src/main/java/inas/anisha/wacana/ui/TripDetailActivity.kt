@@ -8,7 +8,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import inas.anisha.wacana.R
 import inas.anisha.wacana.dataModel.TripDataModel
-import kotlinx.android.synthetic.main.activity_item_detail.*
+import kotlinx.android.synthetic.main.activity_trip_detail.*
 
 /**
  * An activity representing a single Item detail screen. This
@@ -20,7 +20,7 @@ class TripDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_item_detail)
+        setContentView(R.layout.activity_trip_detail)
         setSupportActionBar(detail_toolbar)
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
