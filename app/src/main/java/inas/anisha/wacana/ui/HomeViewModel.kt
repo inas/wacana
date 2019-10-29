@@ -7,7 +7,6 @@ import inas.anisha.wacana.Repository
 import inas.anisha.wacana.db.entity.TripEntity
 import org.apache.commons.lang3.time.DateUtils
 import java.text.SimpleDateFormat
-import java.util.concurrent.TimeUnit
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -23,10 +22,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 startDate = SimpleDateFormat("dd MMM yyyy").format(it.startDate.time)
                 endDate = if (DateUtils.isSameDay(it.startDate, it.endDate)) null else
                     SimpleDateFormat("dd MMM yyyy").format(it.endDate.time)
-                daysCount = TimeUnit.DAYS.convert(
-                    (it.endDate.time.time - it.startDate.time.time),
-                    TimeUnit.MILLISECONDS
-                ).toInt() + 1
                 isSelected.value = false
                 tripEntity = it
             }

@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.ActivityHomeBinding
-import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.trip_list.*
 import kotlinx.android.synthetic.main.trip_list.view.*
 
@@ -37,8 +36,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home, null)
-        setSupportActionBar(toolbar)
-        toolbar.title = title
+        setSupportActionBar(binding.toolbar)
+        binding.toolbar.title = title
 
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
@@ -56,7 +55,7 @@ class HomeActivity : AppCompatActivity() {
         super.onStart()
         setupRecyclerView()
 
-        button_add_trip.setOnClickListener {
+        binding.tripList.button_add_trip.setOnClickListener {
             val intent = Intent(this@HomeActivity, NewTripActivity::class.java)
             startActivity(intent)
         }

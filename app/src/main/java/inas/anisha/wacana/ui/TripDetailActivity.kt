@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import inas.anisha.wacana.R
-import inas.anisha.wacana.dataModel.TripDataModel
+import inas.anisha.wacana.databinding.ActivityTripDetailBinding
+import inas.anisha.wacana.db.entity.TripEntity
 import kotlinx.android.synthetic.main.activity_trip_detail.*
 
 /**
@@ -18,18 +20,15 @@ import kotlinx.android.synthetic.main.activity_trip_detail.*
  */
 class TripDetailActivity : AppCompatActivity() {
 
+    lateinit var viewModel: TripDetailViewModel
+    lateinit var binding: ActivityTripDetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_trip_detail)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_trip_detail, null)
         setSupportActionBar(detail_toolbar)
-
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
+        viewModel = ViewModelProviders.of(this).get(TripDetailViewModel::class.java)
+        binding.viewModel = viewModel
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -49,7 +48,7 @@ class TripDetailActivity : AppCompatActivity() {
                 arguments = Bundle().apply {
                     putParcelable(
                         TripDetailFragment.ARG_ITEM_ID,
-                        intent.getParcelableExtra<TripDataModel>(TripDetailFragment.ARG_ITEM_ID)
+                        intent.getParcelableExtra<TripEntity>(TripDetailFragment.ARG_ITEM_ID)
                     )
                 }
             }
@@ -57,6 +56,16 @@ class TripDetailActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .add(R.id.trip_detail_container, fragment)
                 .commit()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.initViewModel(intent.getParcelableExtra(TripDetailFragment.ARG_ITEM_ID))
+
+        binding.fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
         }
     }
 
