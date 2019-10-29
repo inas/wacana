@@ -60,7 +60,7 @@ class NewTripActivity : AppCompatActivity() {
 
         binding.buttonAddTrip.setOnClickListener {
             viewModel.addTrip()
-//            finish()
+            finish()
         }
 
         viewModel.startDate.observe(this, androidx.lifecycle.Observer {

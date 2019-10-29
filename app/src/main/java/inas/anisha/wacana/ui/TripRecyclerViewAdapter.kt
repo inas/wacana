@@ -1,15 +1,19 @@
 package inas.anisha.wacana.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.TripListItemBinding
-import inas.anisha.wacana.db.entity.TripEntity
 
 
 class TripRecyclerViewAdapter(
+    private var context: Context,
+    private var lifecycleOwner: LifecycleOwner,
     private var data: List<TripItemViewModel>,
     private var clickListener: OnItemClickListener
 ) :
@@ -27,7 +31,11 @@ class TripRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.viewModel = data[position]
-        holder.itemView.setOnClickListener { clickListener.onItemClick(data[position].tripEntity) }
+        holder.itemView.setOnClickListener { clickListener.onItemClick(position) }
+        data[position].isSelected.observe(lifecycleOwner, Observer {
+            val color = context.resources.getColor(if (it) R.color.yellow else R.color.white)
+            holder.binding.tripListItemCard.setCardBackgroundColor(color)
+        })
     }
 
     inner class ViewHolder(val binding: TripListItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -37,11 +45,12 @@ class TripRecyclerViewAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(tripEntity: TripEntity)
+        fun onItemClick(position: Int)
     }
 
     fun updateList(newData: List<TripItemViewModel>) {
         data = newData
         notifyDataSetChanged()
     }
+
 }

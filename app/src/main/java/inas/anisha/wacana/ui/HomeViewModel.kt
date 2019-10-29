@@ -7,23 +7,38 @@ import inas.anisha.wacana.Repository
 import inas.anisha.wacana.db.entity.TripEntity
 import org.apache.commons.lang3.time.DateUtils
 import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
+
+    var selectedTrip: Int = -1
+    var tripItemViewModelList: List<TripItemViewModel> = mutableListOf()
     var tripEntity: LiveData<List<TripEntity>> =
         Repository.getInstance(getApplication()).getAllTrip()
 
     fun getTripItemVMList(tripEntityList: List<TripEntity>): List<TripItemViewModel> {
-        val tripItemViewModelList = tripEntityList.map {
+        tripItemViewModelList = tripEntityList.map {
             TripItemViewModel().apply {
                 destination = it.destination
                 startDate = SimpleDateFormat("dd MMM yyyy").format(it.startDate.time)
                 endDate = if (DateUtils.isSameDay(it.startDate, it.endDate)) null else
                     SimpleDateFormat("dd MMM yyyy").format(it.endDate.time)
-                isSelected = false
+                daysCount = TimeUnit.DAYS.convert(
+                    (it.endDate.time.time - it.startDate.time.time),
+                    TimeUnit.MILLISECONDS
+                ).toInt() + 1
+                isSelected.value = false
                 tripEntity = it
             }
         }
-        if (tripItemViewModelList.size > 0) tripItemViewModelList[0].isSelected = true
         return tripItemViewModelList
+    }
+
+    fun selectTrip(newTripIndex: Int) {
+        if (selectedTrip >= 0 && selectedTrip < tripItemViewModelList.size)
+            tripItemViewModelList[selectedTrip].isSelected.value = false
+        selectedTrip = newTripIndex
+        if (newTripIndex >= 0 && newTripIndex < tripItemViewModelList.size)
+            tripItemViewModelList[newTripIndex].isSelected.value = true
     }
 }
