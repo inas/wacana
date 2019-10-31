@@ -4,8 +4,13 @@ import android.app.Application
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import inas.anisha.wacana.db.AppDatabase
+import inas.anisha.wacana.db.dao.DocumentDao
 import inas.anisha.wacana.db.dao.TripDao
+import inas.anisha.wacana.db.entity.DocumentEntity
 import inas.anisha.wacana.db.entity.TripEntity
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
+
 
 class Repository(application: Application) {
 
@@ -21,10 +26,14 @@ class Repository(application: Application) {
     }
 
     var tripDao: TripDao
+    var documentDao: DocumentDao
+    var documentList: LiveData<List<DocumentEntity>>
 
     init {
         val db = AppDatabase.getDatabase(application)
         tripDao = db.tripDao()
+        documentDao = db.documentDao()
+        documentList = documentDao.getAllDocuments()
     }
 
     fun getAllTrip(): LiveData<List<TripEntity>> {
@@ -41,6 +50,27 @@ class Repository(application: Application) {
 
     fun clearTrip() {
         clearTripAsyncTask(tripDao).execute()
+    }
+
+    fun getAllDocuments(): LiveData<List<DocumentEntity>> {
+        return Observable.fromCallable { documentDao.getAllDocuments() }
+            .subscribeOn(Schedulers.io()).blockingSingle()
+    }
+
+    fun getAllDocuments(tripId: Long): LiveData<List<DocumentEntity>> {
+        return Observable.fromCallable { documentDao.getAllDocuments(tripId) }
+            .subscribeOn(Schedulers.io()).blockingSingle()
+    }
+
+    fun insertDocument(document: DocumentEntity) {
+        Observable.fromCallable { documentDao.insertDocument(document) }
+            .subscribeOn(Schedulers.io()).subscribe()
+        val document = getAllDocuments()
+        val docs = document
+    }
+
+    fun deleteDocument(document: DocumentEntity) {
+        documentDao.deleteDocument(document)
     }
 
     private class InsertTripAsyncTask internal constructor(private val mAsyncTripDao: TripDao) :
@@ -64,6 +94,17 @@ class Repository(application: Application) {
         override fun doInBackground(vararg params: TripEntity): Void? {
             mAsyncTripDao.deleteAll()
             return null
+        }
+    }
+
+    private class getDocumentsAsyncTask internal constructor(
+        private val mAsyncDocumentDao: DocumentDao,
+        private val tripId: Long
+    ) :
+        AsyncTask<Long, Void, LiveData<List<DocumentEntity>>>() {
+        override fun doInBackground(vararg params: Long?): LiveData<List<DocumentEntity>> {
+
+            return mAsyncDocumentDao.getAllDocuments(tripId)
         }
     }
 }

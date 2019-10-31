@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.snackbar.Snackbar
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.ActivityTripDetailBinding
 import inas.anisha.wacana.db.entity.TripEntity
@@ -44,11 +43,11 @@ class TripDetailActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            val fragment = TripDetailFragment().apply {
+            val fragment = TripDetailTabLayoutFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(
-                        TripDetailFragment.ARG_ITEM_ID,
-                        intent.getParcelableExtra<TripEntity>(TripDetailFragment.ARG_ITEM_ID)
+                        TripDetailTabLayoutFragment.ARG_TRIP_ID,
+                        intent.getParcelableExtra<TripEntity>(TripDetailTabLayoutFragment.ARG_TRIP_ID)
                     )
                 }
             }
@@ -61,12 +60,7 @@ class TripDetailActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.initViewModel(intent.getParcelableExtra(TripDetailFragment.ARG_ITEM_ID))
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        viewModel.initViewModel(intent.getParcelableExtra(TripDetailTabLayoutFragment.ARG_TRIP_ID))
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =

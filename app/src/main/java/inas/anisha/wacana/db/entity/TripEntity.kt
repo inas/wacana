@@ -10,7 +10,7 @@ import java.util.*
 @Entity(tableName = "trip")
 @Parcelize
 data class TripEntity(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "trip_id") val id: Long,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id: Long,
     @ColumnInfo(name = "destination") val destination: String,
     @ColumnInfo(name = "start_date") var startDate: Calendar,
     @ColumnInfo(name = "end_date") var endDate: Calendar

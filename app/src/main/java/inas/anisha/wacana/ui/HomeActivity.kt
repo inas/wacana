@@ -84,11 +84,11 @@ class HomeActivity : AppCompatActivity() {
                     val index = viewModel.tripItemViewModelList.size - position - 1
                     viewModel.selectTrip(index)
                     if (twoPane) {
-                        val fragment = TripDetailFragment().apply {
+                        val fragment = TripDetailTabLayoutFragment().apply {
                             arguments = Bundle().apply {
                                 putParcelable(
-                                    TripDetailFragment.ARG_ITEM_ID,
-                                    viewModel.tripItemViewModelList[index].tripEntity
+                                    TripDetailTabLayoutFragment.ARG_TRIP_ID,
+                                    this@HomeActivity.viewModel.tripItemViewModelList[index].tripEntity
                                 )
                             }
                         }
@@ -100,7 +100,7 @@ class HomeActivity : AppCompatActivity() {
                         val intent =
                             Intent(this@HomeActivity, TripDetailActivity::class.java).apply {
                                 putExtra(
-                                    TripDetailFragment.ARG_ITEM_ID,
+                                    TripDetailTabLayoutFragment.ARG_TRIP_ID,
                                     viewModel.tripItemViewModelList[index].tripEntity
                                 )
                             }

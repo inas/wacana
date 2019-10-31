@@ -6,14 +6,17 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import inas.anisha.classify.db.converters.CalendarConverter
+import inas.anisha.wacana.db.dao.DocumentDao
 import inas.anisha.wacana.db.dao.TripDao
+import inas.anisha.wacana.db.entity.DocumentEntity
 import inas.anisha.wacana.db.entity.TripEntity
 
-@Database(entities = [TripEntity::class], version = 1)
+@Database(entities = [TripEntity::class, DocumentEntity::class], version = 1)
 @TypeConverters(CalendarConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun tripDao(): TripDao
+    abstract fun documentDao(): DocumentDao
 
     companion object {
         @Volatile
