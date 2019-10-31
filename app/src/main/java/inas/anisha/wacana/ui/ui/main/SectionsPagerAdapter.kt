@@ -6,8 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import inas.anisha.wacana.ui.DocumentTabFragment
-import inas.anisha.wacana.ui.DocumentTabViewModel
-import java.util.*
 
 private val TAB_TITLES = arrayOf(
     "tab 1",
@@ -21,7 +19,7 @@ private val TAB_TITLES = arrayOf(
 class SectionsPagerAdapter(
     private val context: Context,
     fm: FragmentManager,
-    private val documentTabViewModel: DocumentTabViewModel
+    private val tripId: Long
 ) :
     FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
@@ -30,11 +28,7 @@ class SectionsPagerAdapter(
         // Return a PlaceholderFragment (defined as a static inner class below).
         if (position == 0) return DocumentTabFragment().apply {
             arguments = Bundle().apply {
-                putStringArrayList(
-                    DocumentTabFragment.DOCUMENTS,
-                    documentTabViewModel.uriList as ArrayList<String>
-                )
-                putLong(DocumentTabFragment.TRIP_ID, documentTabViewModel.tripId)
+                putLong(DocumentTabFragment.TRIP_ID, tripId)
             }
         }
         return PlaceholderFragment.newInstance(position + 1)
