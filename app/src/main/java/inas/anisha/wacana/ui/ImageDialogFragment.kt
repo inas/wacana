@@ -8,10 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import com.bumptech.glide.Glide
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.ImageLayoutBinding
-import java.io.File
 
 class ImageDialogFragment : DialogFragment() {
 
@@ -42,9 +40,14 @@ class ImageDialogFragment : DialogFragment() {
             imageDialog.window?.setLayout(width, height)
         }
 
+        dialog?.setCanceledOnTouchOutside(true)
+        binding.imageView.setOnClickListener {
+            dismiss()
+        }
+
         requireContext().let {
             val uri = Uri.parse(arguments?.getString(IMAGE_DIALOG))
-            Glide.with(it).load(File(uri.path)).into(binding.imageView)
+            binding.imageView.setImageURI(uri)
         }
 
     }

@@ -11,10 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.FragmentTabDocumentBinding
+
 
 class DocumentTabFragment : Fragment() {
 
@@ -54,6 +56,28 @@ class DocumentTabFragment : Fragment() {
                 })
 
         }
+
+        viewModel.documentList.observe(this, Observer {
+            val data = viewModel.getUris(it)
+            (binding.tabDocumentRecyclerView.adapter as ImageGridAdapter).updateList(data)
+            requireContext().let { context ->
+                binding.tabDocumentRecyclerView.adapter = ImageGridAdapter(context, data,
+                    object : ImageGridAdapter.OnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            fragmentManager?.beginTransaction()?.let { ft ->
+                                ImageDialogFragment().apply {
+                                    arguments = Bundle().apply {
+                                        putString(
+                                            ImageDialogFragment.IMAGE_DIALOG,
+                                            viewModel.uriList[position]
+                                        )
+                                    }
+                                }.show(ft, "")
+                            }
+                        }
+                    })
+            }
+        })
 
         binding.tabDocumentFab.setOnClickListener { browseImage() }
         return binding.root
@@ -95,9 +119,16 @@ class DocumentTabFragment : Fragment() {
     }
 
     fun browseImage() {
-        val gallery = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        gallery.type = "image/*"
-        startActivityForResult(gallery, IMAGE_GALLERY_REQUEST)
+//        val gallery = Intent(Intent.ACTION_OPEN_DOCUMENT)
+//        gallery.type = "image/*"
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(
+            Intent.createChooser(intent, "Select Picture"),
+            IMAGE_GALLERY_REQUEST
+        )
+//        startActivityForResult(gallery, IMAGE_GALLERY_REQUEST)
     }
 
     companion object {
