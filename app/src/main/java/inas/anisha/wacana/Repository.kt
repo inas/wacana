@@ -65,12 +65,11 @@ class Repository(application: Application) {
     fun insertDocument(document: DocumentEntity) {
         Observable.fromCallable { documentDao.insertDocument(document) }
             .subscribeOn(Schedulers.io()).subscribe()
-        val document = getAllDocuments()
-        val docs = document
     }
 
-    fun deleteDocument(document: DocumentEntity) {
-        documentDao.deleteDocument(document)
+    fun deleteDocuments(document: List<DocumentEntity>) {
+        Observable.fromCallable { documentDao.deleteDocuments(*document.toTypedArray()) }
+            .subscribeOn(Schedulers.io()).subscribe()
     }
 
     private class InsertTripAsyncTask internal constructor(private val mAsyncTripDao: TripDao) :

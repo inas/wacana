@@ -20,6 +20,6 @@ class TripDetailTabLayoutViewModel(application: Application) : AndroidViewModel(
     }
 
     fun getDocumentUris(documents: List<DocumentEntity>): List<String> {
-        return documents.map { it.uri }
+        return documents.map { it.filePath }
     }
 }

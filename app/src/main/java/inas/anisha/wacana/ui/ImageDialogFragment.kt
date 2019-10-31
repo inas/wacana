@@ -1,6 +1,5 @@
 package inas.anisha.wacana.ui
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import com.bumptech.glide.Glide
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.ImageLayoutBinding
+import java.io.File
 
 class ImageDialogFragment : DialogFragment() {
 
@@ -27,7 +28,7 @@ class ImageDialogFragment : DialogFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.image_layout, container, false)
-        binding.imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        binding.imageView.scaleType = ImageView.ScaleType.FIT_CENTER
         return binding.root
     }
 
@@ -46,8 +47,9 @@ class ImageDialogFragment : DialogFragment() {
         }
 
         requireContext().let {
-            val uri = Uri.parse(arguments?.getString(IMAGE_DIALOG))
-            binding.imageView.setImageURI(uri)
+            Glide.with(it)
+                .load(File(arguments?.getString(IMAGE_DIALOG)))
+                .into(binding.imageView)
         }
 
     }

@@ -14,6 +14,6 @@ import androidx.room.PrimaryKey
 )
 data class DocumentEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "document_id") val id: Long,
-    @ColumnInfo(name = "uri") val uri: String,
+    @ColumnInfo(name = "file_path") val filePath: String,
     @ColumnInfo(name = "trip_id") val tripId: Long
 )

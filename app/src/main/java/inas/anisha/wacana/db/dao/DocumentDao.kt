@@ -10,7 +10,7 @@ interface DocumentDao {
     fun insertDocument(document: DocumentEntity)
 
     @Delete
-    fun deleteDocument(document: DocumentEntity)
+    fun deleteDocuments(vararg document: DocumentEntity)
 
     @Query("DELETE FROM document WHERE trip_id = :tripId")
     fun deleteAllDocuments(tripId: Long)

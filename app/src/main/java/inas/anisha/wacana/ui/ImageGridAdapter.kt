@@ -1,13 +1,14 @@
 package inas.anisha.wacana.ui
 
 import android.content.Context
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import inas.anisha.wacana.R
-import inas.anisha.wacana.databinding.ImageLayoutBinding
+import inas.anisha.wacana.databinding.ImageGridItemBinding
+import java.io.File
 
 
 class ImageGridAdapter(
@@ -17,12 +18,12 @@ class ImageGridAdapter(
 ) :
     RecyclerView.Adapter<ImageGridAdapter.ViewHolder>() {
 
-    lateinit var binding: ImageLayoutBinding
+    lateinit var binding: ImageGridItemBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = DataBindingUtil.inflate<ImageLayoutBinding>(
+        binding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.image_layout,
+            R.layout.image_grid_item,
             parent,
             false
         )
@@ -31,17 +32,14 @@ class ImageGridAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemView.setOnClickListener { clickListener.onItemClick(position) }
-//        val contentUri = Uri.parse(data[position])
-//        val cursor = context.contentResolver.query(contentUri, null, null, null, null)
-//        cursor?.let {
-//
-//        }
-//        Glide.with(context).load(uri).into(binding.imageView)
         val data = data[position]
-        binding.imageView.setImageURI(Uri.parse(data))
+        Glide.with(context)
+            .load(File(data))
+            .into(binding.imageGridItemImageView)
     }
 
-    inner class ViewHolder(val binding: ImageLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: ImageGridItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun getItemCount(): Int {
         return data.size
