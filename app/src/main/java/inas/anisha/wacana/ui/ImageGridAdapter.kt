@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.ImageLayoutBinding
-import java.io.File
 
 
 class ImageGridAdapter(
@@ -33,7 +31,14 @@ class ImageGridAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemView.setOnClickListener { clickListener.onItemClick(position) }
-        Glide.with(context).load(File(Uri.parse(data[position]).path)).into(binding.imageView)
+//        val contentUri = Uri.parse(data[position])
+//        val cursor = context.contentResolver.query(contentUri, null, null, null, null)
+//        cursor?.let {
+//
+//        }
+//        Glide.with(context).load(uri).into(binding.imageView)
+        val data = data[position]
+        binding.imageView.setImageURI(Uri.parse(data))
     }
 
     inner class ViewHolder(val binding: ImageLayoutBinding) : RecyclerView.ViewHolder(binding.root)
