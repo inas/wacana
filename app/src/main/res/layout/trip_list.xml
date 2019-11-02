@@ -16,6 +16,63 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/trip_list_layout_weather"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            app:layout_constraintBottom_toTopOf="@id/button_add_trip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/trip_list_image_view_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_near_me_black_24dp"
+                app:layout_constraintBottom_toBottomOf="@id/trip_list_text_view_location"
+                app:layout_constraintEnd_toStartOf="@id/trip_list_text_view_location"
+                app:layout_constraintTop_toTopOf="@id/trip_list_text_view_location" />
+
+            <TextView
+                android:id="@+id/trip_list_text_view_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:text="Singapore"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/trip_list_text_view_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/trip_list_text_view_location" />
+
+            <TextView
+                android:id="@+id/trip_list_text_view_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="28°"
+                android:textSize="40sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/trip_list_text_view_weather" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_add_trip"
             android:layout_width="0dp"
@@ -26,7 +83,7 @@
             android:textColor="@color/cardview_light_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/trip_list_layout_weather" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
