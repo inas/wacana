@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="inas.anisha.wacana.ui.TripDetailViewModel" />
+            type="inas.anisha.wacana.ui.tripDetail.TripDetailViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.TripDetailActivity">
+        tools:context=".ui.tripDetail.TripDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"

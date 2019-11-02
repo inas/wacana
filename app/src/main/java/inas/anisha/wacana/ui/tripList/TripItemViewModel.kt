@@ -1,4 +1,4 @@
-package inas.anisha.wacana.ui
+package inas.anisha.wacana.ui.tripList
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

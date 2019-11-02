@@ -1,4 +1,4 @@
-package inas.anisha.wacana.ui
+package inas.anisha.wacana.ui.tripDetail
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

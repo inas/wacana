@@ -1,4 +1,4 @@
-package inas.anisha.wacana.ui
+package inas.anisha.wacana.ui.documentTab
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
@@ -17,7 +17,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.FragmentTabDocumentBinding
-
+import inas.anisha.wacana.ui.home.HomeActivity
+import inas.anisha.wacana.ui.tripDetail.TripDetailActivity
+import inas.anisha.wacana.util.FilePath
 
 class DocumentTabFragment : Fragment() {
 
@@ -38,39 +40,17 @@ class DocumentTabFragment : Fragment() {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_tab_document, container, false)
         requireContext().let {
-            binding.tabDocumentRecyclerView.layoutManager = GridAutofitLayoutManager(
-                it, TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, 128f,
-                    it.resources.displayMetrics
-                ).toInt()
-            )
-            binding.tabDocumentRecyclerView.adapter = ImageGridAdapter(it, viewModel.uriList,
-                object : ImageGridAdapter.OnItemClickListener {
-                    override fun onItemClick(position: Int) {
-                        fragmentManager?.beginTransaction()?.let { ft ->
-                            ImageDialogFragment().apply {
-                                arguments = Bundle().apply {
-                                    putString(
-                                        ImageDialogFragment.FILE_PATH,
-                                        this@DocumentTabFragment.viewModel.uriList[position]
-                                    )
-                                    putLong(
-                                        ImageDialogFragment.IMAGE_ID,
-                                        this@DocumentTabFragment.viewModel.imageIdList[position]
-                                    )
-                                }
-                            }.show(ft, "")
-                        }
-                    }
-                })
-
-        }
-
-        viewModel.documentList.observe(this, Observer {
-            val data = viewModel.getUris(it)
-            requireContext().let { context ->
-                binding.tabDocumentRecyclerView.adapter = ImageGridAdapter(context, data,
-                    object : ImageGridAdapter.OnItemClickListener {
+            binding.tabDocumentRecyclerView.layoutManager =
+                GridAutofitLayoutManager(
+                    it, TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 128f,
+                        it.resources.displayMetrics
+                    ).toInt()
+                )
+            binding.tabDocumentRecyclerView.adapter =
+                ImageGridAdapter(it, viewModel.uriList,
+                    object :
+                        ImageGridAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             fragmentManager?.beginTransaction()?.let { ft ->
                                 ImageDialogFragment().apply {
@@ -88,6 +68,33 @@ class DocumentTabFragment : Fragment() {
                             }
                         }
                     })
+
+        }
+
+        viewModel.documentList.observe(this, Observer {
+            val data = viewModel.getUris(it)
+            requireContext().let { context ->
+                binding.tabDocumentRecyclerView.adapter =
+                    ImageGridAdapter(context, data,
+                        object :
+                            ImageGridAdapter.OnItemClickListener {
+                            override fun onItemClick(position: Int) {
+                                fragmentManager?.beginTransaction()?.let { ft ->
+                                    ImageDialogFragment().apply {
+                                        arguments = Bundle().apply {
+                                            putString(
+                                                ImageDialogFragment.FILE_PATH,
+                                                this@DocumentTabFragment.viewModel.uriList[position]
+                                            )
+                                            putLong(
+                                                ImageDialogFragment.IMAGE_ID,
+                                                this@DocumentTabFragment.viewModel.imageIdList[position]
+                                            )
+                                        }
+                                    }.show(ft, "")
+                                }
+                            }
+                        })
             }
 
         })
@@ -99,7 +106,9 @@ class DocumentTabFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == IMAGE_GALLERY_REQUEST) {
-            data?.data?.let { viewModel.addDocument(FilePath.getPath(activity, it)) }
+            requireContext().let { context ->
+                data?.data?.let { viewModel.addDocument(FilePath.getPath(context, it)) }
+            }
         }
     }
 
@@ -124,8 +133,6 @@ class DocumentTabFragment : Fragment() {
                 openGallery()
             }
         }
-
-
     }
 
     fun openGallery() {

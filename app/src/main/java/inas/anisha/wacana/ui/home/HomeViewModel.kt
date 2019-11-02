@@ -1,10 +1,11 @@
-package inas.anisha.wacana.ui
+package inas.anisha.wacana.ui.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import inas.anisha.wacana.Repository
 import inas.anisha.wacana.db.entity.TripEntity
+import inas.anisha.wacana.ui.tripList.TripItemViewModel
 import org.apache.commons.lang3.time.DateUtils
 import java.text.SimpleDateFormat
 
@@ -14,6 +15,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var tripItemViewModelList: List<TripItemViewModel> = mutableListOf()
     var tripEntity: LiveData<List<TripEntity>> =
         Repository.getInstance(getApplication()).getAllTrip()
+    var locationData = LocationLiveData(application)
 
     fun getTripItemVMList(tripEntityList: List<TripEntity>): List<TripItemViewModel> {
         tripItemViewModelList = tripEntityList.map {

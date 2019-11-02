@@ -1,4 +1,4 @@
-package inas.anisha.wacana.ui
+package inas.anisha.wacana.ui.documentTab
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

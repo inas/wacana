@@ -1,4 +1,4 @@
-package inas.anisha.wacana.ui
+package inas.anisha.wacana.ui.newTrip
 
 import android.os.Bundle
 import android.text.InputType

@@ -8,7 +8,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".ui.HomeActivity">
+    tools:context=".ui.home.HomeActivity">
 
     <!--
     This layout is a two-pane layout for the Items
@@ -107,7 +107,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/container_button_add_trip"
-        tools:context="inas.anisha.wacana.ui.HomeActivity"
+        tools:context="inas.anisha.wacana.ui.home.HomeActivity"
         tools:listitem="@layout/trip_list_item" />
 
     <View

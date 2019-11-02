@@ -1,4 +1,4 @@
-package inas.anisha.wacana.ui
+package inas.anisha.wacana.ui.documentTab
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,7 +21,11 @@ class ImageDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialogStyle)
         viewModel = ViewModelProviders.of(this).get(ImageDialogViewModel::class.java).apply {
-            initViewModel(arguments?.getLong(IMAGE_ID) ?: 0, arguments?.getString(FILE_PATH) ?: "")
+            initViewModel(
+                arguments?.getLong(IMAGE_ID) ?: 0, arguments?.getString(
+                    FILE_PATH
+                ) ?: ""
+            )
         }
     }
 

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import inas.anisha.wacana.ui.DocumentTabFragment
+import inas.anisha.wacana.ui.documentTab.DocumentTabFragment
 
 private val TAB_TITLES = arrayOf(
     "tab 1",

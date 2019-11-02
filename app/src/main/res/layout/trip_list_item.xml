@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="inas.anisha.wacana.ui.TripItemViewModel" />
+            type="inas.anisha.wacana.ui.tripList.TripItemViewModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,6 +29,8 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.destination}"
                 android:textAppearance="?attr/textAppearanceListItem"
+                android:ellipsize="end"
+                android:maxLines="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

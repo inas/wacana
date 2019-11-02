@@ -1,4 +1,4 @@
-package inas.anisha.wacana.ui
+package inas.anisha.wacana.ui.tripDetail
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.ActivityTripDetailBinding
 import inas.anisha.wacana.db.entity.TripEntity
+import inas.anisha.wacana.ui.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_trip_detail.*
 
 /**
