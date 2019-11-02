@@ -12,6 +12,9 @@ interface DocumentDao {
     @Delete
     fun deleteDocuments(vararg document: DocumentEntity)
 
+    @Query("DELETE FROM document WHERE document_id = :imageId AND file_path = :filePath")
+    fun deleteDocument(imageId: Long, filePath: String)
+
     @Query("DELETE FROM document WHERE trip_id = :tripId")
     fun deleteAllDocuments(tripId: Long)
 

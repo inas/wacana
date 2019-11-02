@@ -67,6 +67,11 @@ class Repository(application: Application) {
             .subscribeOn(Schedulers.io()).subscribe()
     }
 
+    fun deleteDocument(imageId: Long, filePath: String) {
+        Observable.fromCallable { documentDao.deleteDocument(imageId, filePath) }
+            .subscribeOn(Schedulers.io()).subscribe()
+    }
+
     fun deleteDocuments(document: List<DocumentEntity>) {
         Observable.fromCallable { documentDao.deleteDocuments(*document.toTypedArray()) }
             .subscribeOn(Schedulers.io()).subscribe()

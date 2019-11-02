@@ -7,18 +7,22 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import inas.anisha.wacana.R
-import inas.anisha.wacana.databinding.ImageLayoutBinding
-import java.io.File
+import inas.anisha.wacana.databinding.FragmentDialogImageBinding
 
 class ImageDialogFragment : DialogFragment() {
 
-    lateinit var binding: ImageLayoutBinding
+    lateinit var binding: FragmentDialogImageBinding
+    lateinit var viewModel: ImageDialogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
+        setStyle(STYLE_NORMAL, R.style.FullScreenDialogStyle)
+        viewModel = ViewModelProviders.of(this).get(ImageDialogViewModel::class.java).apply {
+            initViewModel(arguments?.getLong(IMAGE_ID) ?: 0, arguments?.getString(FILE_PATH) ?: "")
+        }
     }
 
     override fun onCreateView(
@@ -27,13 +31,21 @@ class ImageDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = DataBindingUtil.inflate(inflater, R.layout.image_layout, container, false)
-        binding.imageView.scaleType = ImageView.ScaleType.FIT_CENTER
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_image, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.imageView.scaleType = ImageView.ScaleType.FIT_CENTER
+        binding.fragmentDialogImageViewClose.setOnClickListener { dismiss() }
+        binding.fragmentDialogImageViewDelete.setOnClickListener {
+            viewModel.removeImage()
+            dismiss()
+        }
+
         val imageDialog = dialog
         if (imageDialog != null) {
             val width = ViewGroup.LayoutParams.MATCH_PARENT
@@ -42,19 +54,17 @@ class ImageDialogFragment : DialogFragment() {
         }
 
         dialog?.setCanceledOnTouchOutside(true)
-        binding.imageView.setOnClickListener {
-            dismiss()
-        }
 
         requireContext().let {
             Glide.with(it)
-                .load(File(arguments?.getString(IMAGE_DIALOG)))
+                .load(viewModel.imageFilePath)
                 .into(binding.imageView)
         }
 
     }
 
     companion object {
-        val IMAGE_DIALOG = "IMAGE_DIALOG"
+        val FILE_PATH = "FILE_PATH"
+        val IMAGE_ID = "IMAGE_ID"
     }
 }

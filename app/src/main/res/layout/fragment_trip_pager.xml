@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/tab_document_layout_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.ui.main.PlaceholderFragment">
@@ -22,7 +22,7 @@
             android:layout_marginBottom="8dp"
             android:text="asgsg ahah hdh ahah jd dj"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+            app:layout_constraintTop_toTopOf="@+id/tab_document_layout_recycler_view"
             tools:layout_constraintLeft_creator="1"
             tools:layout_constraintTop_creator="1" />
 
