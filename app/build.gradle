@@ -82,4 +82,7 @@ dependencies {
 
     // Location
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    // WorkManager
+    implementation "androidx.work:work-rxjava2:2.2.0"
 }

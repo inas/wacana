@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:background="@color/cardview_light_background"
             android:elevation="4dp"
-            android:paddingTop="8dp"
             app:layout_constraintEnd_toEndOf="@id/item_list"
             app:layout_constraintStart_toStartOf="@id/item_list"
             app:layout_constraintTop_toTopOf="parent">
@@ -41,8 +40,10 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
+                android:paddingTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView

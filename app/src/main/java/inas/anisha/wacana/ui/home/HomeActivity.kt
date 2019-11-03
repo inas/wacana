@@ -9,13 +9,16 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkManager
 import inas.anisha.wacana.R
+import inas.anisha.wacana.Repository
 import inas.anisha.wacana.databinding.ActivityHomeBinding
 import inas.anisha.wacana.ui.newTrip.NewTripActivity
 import inas.anisha.wacana.ui.tripDetail.TripDetailActivity
@@ -57,9 +60,14 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel.weather.observe(this, Observer {
             viewModel.updateWeather(it)
-            trip_list_text_view_location.text = viewModel.locationName
-            trip_list_text_view_temperature.text = viewModel.temperature
-            trip_list_text_view_weather.text = viewModel.weatherDescription
+            if (it.main?.temp == null || it.name == null || it.weather[0].main == null) {
+                trip_list_layout_weather.visibility = View.GONE
+            } else {
+                trip_list_layout_weather.visibility = View.VISIBLE
+                trip_list_text_view_location.text = viewModel.locationName
+                trip_list_text_view_temperature.text = viewModel.temperature
+                trip_list_text_view_weather.text = viewModel.weatherDescription
+            }
         })
     }
 
@@ -81,6 +89,11 @@ class HomeActivity : AppCompatActivity() {
                 invokeLocationAction()
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        WorkManager.getInstance(this).cancelAllWorkByTag(Repository.WEATHER_JOB)
     }
 
     private fun initViews() {
