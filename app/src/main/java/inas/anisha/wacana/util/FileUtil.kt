@@ -9,7 +9,10 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 
-class FilePath {
+/**
+ * Author: https://stackoverflow.com/a/45503636/6463699
+ */
+class FileUtil {
 
     companion object {
         /**

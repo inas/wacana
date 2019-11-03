@@ -23,7 +23,6 @@ import inas.anisha.wacana.ui.tripDetail.TripDetailTabLayoutFragment
 import inas.anisha.wacana.ui.tripList.TripRecyclerViewAdapter
 import inas.anisha.wacana.util.GpsUtil
 import kotlinx.android.synthetic.main.trip_list.*
-import kotlinx.android.synthetic.main.trip_list.view.*
 
 class HomeActivity : AppCompatActivity() {
 
@@ -40,6 +39,9 @@ class HomeActivity : AppCompatActivity() {
         binding.toolbar.title = title
 
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
         GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
             override fun gpsStatus(isGPSEnabled: Boolean) {
                 this@HomeActivity.isGPSEnabled = isGPSEnabled
@@ -52,6 +54,13 @@ class HomeActivity : AppCompatActivity() {
         twoPane = trip_detail_container != null
         initViews()
         invokeLocationAction()
+
+        viewModel.weather.observe(this, Observer {
+            viewModel.updateWeather(it)
+            trip_list_text_view_location.text = viewModel.locationName
+            trip_list_text_view_temperature.text = viewModel.temperature
+            trip_list_text_view_weather.text = viewModel.weatherDescription
+        })
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -77,13 +86,13 @@ class HomeActivity : AppCompatActivity() {
     private fun initViews() {
         setupRecyclerView()
 
-        binding.tripList.button_add_trip.setOnClickListener {
+        button_add_trip.setOnClickListener {
             val intent = Intent(this@HomeActivity, NewTripActivity::class.java)
             startActivity(intent)
         }
 
         viewModel.tripEntity.observe(this, androidx.lifecycle.Observer { tripDataList ->
-            (binding.tripList.item_list.adapter as TripRecyclerViewAdapter).updateList(
+            (item_list.adapter as TripRecyclerViewAdapter).updateList(
                 viewModel.getTripItemVMList(
                     tripDataList
                 ).reversed()
@@ -91,13 +100,13 @@ class HomeActivity : AppCompatActivity() {
             val orientation = resources.configuration.orientation
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 viewModel.selectTrip(viewModel.tripItemViewModelList.size - 1)
-                selectFirstItem(Handler(), binding.tripList.item_list)
+                selectFirstItem(Handler(), item_list)
             }
         })
     }
 
     private fun setupRecyclerView() {
-        binding.tripList.item_list.adapter = TripRecyclerViewAdapter(
+        item_list.adapter = TripRecyclerViewAdapter(
             this,
             this,
             mutableListOf(),
@@ -171,7 +180,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun startLocationUpdate() {
         viewModel.locationData.observe(this, Observer {
-            Log.d("debugweather", "yesssss " + it.longitude + "  -  " + it.longitude)
+            viewModel.getCurrentWeather(it.latitude, it.longitude)
         })
     }
 

@@ -19,7 +19,7 @@ import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.FragmentTabDocumentBinding
 import inas.anisha.wacana.ui.home.HomeActivity
 import inas.anisha.wacana.ui.tripDetail.TripDetailActivity
-import inas.anisha.wacana.util.FilePath
+import inas.anisha.wacana.util.FileUtil
 
 class DocumentTabFragment : Fragment() {
 
@@ -107,7 +107,7 @@ class DocumentTabFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == IMAGE_GALLERY_REQUEST) {
             requireContext().let { context ->
-                data?.data?.let { viewModel.addDocument(FilePath.getPath(context, it)) }
+                data?.data?.let { viewModel.addDocument(FileUtil.getPath(context, it)) }
             }
         }
     }
