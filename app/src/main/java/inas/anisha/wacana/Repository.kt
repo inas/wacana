@@ -11,13 +11,13 @@ import inas.anisha.wacana.apiProvider.response.WeatherResponse
 import inas.anisha.wacana.apiProvider.retrofit.RetrofitRequest
 import inas.anisha.wacana.apiProvider.retrofit.WeatherService
 import inas.anisha.wacana.apiProvider.retrofit.WeatherService.Companion.API_KEY
-import inas.anisha.wacana.apiProvider.retrofit.WeatherWorker
 import inas.anisha.wacana.db.AppDatabase
 import inas.anisha.wacana.db.dao.DocumentDao
 import inas.anisha.wacana.db.dao.TripDao
 import inas.anisha.wacana.db.entity.DocumentEntity
 import inas.anisha.wacana.db.entity.TripEntity
 import inas.anisha.wacana.preferences.AppPreference
+import inas.anisha.wacana.workManager.WeatherWorker
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Call

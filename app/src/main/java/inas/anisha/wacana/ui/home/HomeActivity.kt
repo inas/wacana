@@ -3,9 +3,13 @@ package inas.anisha.wacana.ui.home
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -16,9 +20,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.WorkManager
 import inas.anisha.wacana.R
-import inas.anisha.wacana.Repository
 import inas.anisha.wacana.databinding.ActivityHomeBinding
 import inas.anisha.wacana.ui.newTrip.NewTripActivity
 import inas.anisha.wacana.ui.tripDetail.TripDetailActivity
@@ -31,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
 
     lateinit var viewModel: HomeViewModel
     lateinit var binding: ActivityHomeBinding
+    lateinit var locationSwitchStateReceiver: BroadcastReceiver
 
     private var twoPane: Boolean = false
     private var isGPSEnabled = false
@@ -44,12 +47,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-
-        GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
-            override fun gpsStatus(isGPSEnabled: Boolean) {
-                this@HomeActivity.isGPSEnabled = isGPSEnabled
-            }
-        })
+        turnGPSOn()
     }
 
     override fun onStart() {
@@ -57,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
         twoPane = trip_detail_container != null
         initViews()
         invokeLocationAction()
+        addGPSProviderListener()
 
         viewModel.weather.observe(this, Observer {
             viewModel.updateWeather(it)
@@ -93,7 +92,40 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        WorkManager.getInstance(this).cancelAllWorkByTag(Repository.WEATHER_JOB)
+        unregisterReceiver(locationSwitchStateReceiver)
+    }
+
+    private fun turnGPSOn() {
+        GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
+            override fun gpsStatus(isGPSEnabled: Boolean) {
+                this@HomeActivity.isGPSEnabled = isGPSEnabled
+            }
+        })
+    }
+
+    private fun addGPSProviderListener() {
+        locationSwitchStateReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (LocationManager.PROVIDERS_CHANGED_ACTION == intent.action) {
+                    val locationManager =
+                        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    val isGpsEnabled =
+                        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                    val isNetworkEnabled =
+                        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+                    if (isGpsEnabled || isNetworkEnabled) {
+                        turnGPSOn()
+                    }
+                }
+            }
+        }
+
+        val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        registerReceiver(
+            locationSwitchStateReceiver,
+            IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        )
     }
 
     private fun initViews() {

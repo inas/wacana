@@ -1,4 +1,4 @@
-package inas.anisha.wacana.apiProvider.retrofit
+package inas.anisha.wacana.workManager
 
 import android.app.Application
 import android.content.Context
@@ -8,7 +8,7 @@ import inas.anisha.wacana.Repository
 import inas.anisha.wacana.Repository.Companion.LATITUDE
 import inas.anisha.wacana.Repository.Companion.LONGITUDE
 
-class WeatherWorker(
+class LocationWorker(
     val context: Context,
     val workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
