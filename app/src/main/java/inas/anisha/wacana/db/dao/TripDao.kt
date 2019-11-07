@@ -7,7 +7,7 @@ import inas.anisha.wacana.db.entity.TripEntity
 @Dao
 interface TripDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(tripEntity: TripEntity)
+    fun insert(tripEntity: TripEntity): Long
 
     @Delete
     fun deleteTrip(vararg trip: TripEntity)
@@ -17,4 +17,7 @@ interface TripDao {
 
     @Query("SELECT * from trip")
     fun getAllTrip(): LiveData<List<TripEntity>>
+
+    @Query("SELECT * from trip WHERE id = :id LIMIT 1")
+    fun getTripById(id: Long): TripEntity
 }

@@ -1,7 +1,6 @@
 package inas.anisha.wacana
 
 import android.app.Application
-import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
@@ -17,12 +16,16 @@ import inas.anisha.wacana.db.dao.TripDao
 import inas.anisha.wacana.db.entity.DocumentEntity
 import inas.anisha.wacana.db.entity.TripEntity
 import inas.anisha.wacana.preferences.AppPreference
+import inas.anisha.wacana.ui.newTrip.NewTripActivity
+import inas.anisha.wacana.workers.NotificationWorker
 import inas.anisha.wacana.workers.WeatherWorker
 import io.reactivex.Observable
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.Duration
 import java.util.*
 
 
@@ -126,15 +129,22 @@ class Repository(application: Application) {
     }
 
     fun addTrip(trip: TripEntity) {
-        InsertTripAsyncTask(tripDao).execute(trip)
+        Observable.fromCallable { tripDao.insert(trip) }
+            .subscribeOn(Schedulers.io())
+            .subscribe(Consumer { id ->
+                tripDao.getTripById(id).let {
+                    scheduleNotification(it.destination, it.startDate)
+                }
+            })
     }
 
     fun deleteTrip(trip: TripEntity) {
-        deleteTripAsyncTask(tripDao).execute(trip)
+        Observable.fromCallable { tripDao.deleteTrip(trip) }.subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     fun clearTrip() {
-        clearTripAsyncTask(tripDao).execute()
+        Observable.fromCallable { tripDao.deleteAll() }.subscribeOn(Schedulers.io()).subscribe()
     }
 
     fun getAllDocuments(): LiveData<List<DocumentEntity>> {
@@ -162,38 +172,30 @@ class Repository(application: Application) {
             .subscribeOn(Schedulers.io()).subscribe()
     }
 
-    private class InsertTripAsyncTask internal constructor(private val mAsyncTripDao: TripDao) :
-        AsyncTask<TripEntity, Void, Void>() {
-        override fun doInBackground(vararg params: TripEntity): Void? {
-            mAsyncTripDao.insert(params[0])
-            return null
-        }
+
+    private fun scheduleNotification(destination: String, startDate: Calendar) {
+        val inputData = Data.Builder().apply {
+            putString(NewTripActivity.DESTINATION, destination)
+        }.build()
+        val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
+            .setInitialDelay(calculateDelay(startDate))
+            .setInputData(inputData)
+            .addTag(NewTripActivity.TRIP_NOTIFICATION)
+            .build()
+
+        workManager.enqueue(notificationWork)
     }
 
-    private class deleteTripAsyncTask internal constructor(private val mAsyncTripDao: TripDao) :
-        AsyncTask<TripEntity, Void, Void>() {
-        override fun doInBackground(vararg params: TripEntity): Void? {
-            mAsyncTripDao.deleteTrip(params[0])
-            return null
+    private fun calculateDelay(date: Calendar): Duration {
+        val dueDate = Calendar.getInstance()
+        date.let {
+            dueDate.apply {
+                set(Calendar.YEAR, it.get(Calendar.YEAR))
+                set(Calendar.MONTH, it.get(Calendar.MONTH))
+                set(Calendar.DAY_OF_MONTH, it.get(Calendar.DAY_OF_MONTH))
+                set(Calendar.HOUR_OF_DAY, 12)
+            }
         }
-    }
-
-    private class clearTripAsyncTask internal constructor(private val mAsyncTripDao: TripDao) :
-        AsyncTask<TripEntity, Void, Void>() {
-        override fun doInBackground(vararg params: TripEntity): Void? {
-            mAsyncTripDao.deleteAll()
-            return null
-        }
-    }
-
-    private class getDocumentsAsyncTask internal constructor(
-        private val mAsyncDocumentDao: DocumentDao,
-        private val tripId: Long
-    ) :
-        AsyncTask<Long, Void, LiveData<List<DocumentEntity>>>() {
-        override fun doInBackground(vararg params: Long?): LiveData<List<DocumentEntity>> {
-
-            return mAsyncDocumentDao.getAllDocuments(tripId)
-        }
+        return Duration.ofMillis(dueDate.timeInMillis - System.currentTimeMillis())
     }
 }

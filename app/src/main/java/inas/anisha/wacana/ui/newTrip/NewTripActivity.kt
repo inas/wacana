@@ -5,17 +5,12 @@ import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
 import com.applandeo.materialcalendarview.CalendarView.RANGE_PICKER
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.ActivityNewTripBinding
-import inas.anisha.wacana.workers.NotificationWorker
 import java.text.SimpleDateFormat
-import java.time.Duration
 import java.util.*
 
 class NewTripActivity : AppCompatActivity() {
@@ -67,7 +62,6 @@ class NewTripActivity : AppCompatActivity() {
         }
 
         binding.buttonAddTrip.setOnClickListener {
-            scheduleNotification()
             viewModel.addTrip()
             finish()
         }
@@ -98,33 +92,4 @@ class NewTripActivity : AppCompatActivity() {
         datePickerDialog.build().show()
     }
 
-    private fun scheduleNotification() {
-        val inputData = Data.Builder().apply {
-            putString(DESTINATION, viewModel.destination)
-        }.build()
-
-        viewModel.startDate.value?.let {
-            val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
-                .setInitialDelay(calculateDelay(it))
-                .setInputData(inputData)
-                .addTag(TRIP_NOTIFICATION)
-                .build()
-
-            WorkManager.getInstance(this).enqueue(notificationWork)
-        }
-
-    }
-
-    private fun calculateDelay(date: Calendar): Duration {
-        val dueDate = Calendar.getInstance()
-        date.let {
-            dueDate.apply {
-                set(Calendar.YEAR, it.get(Calendar.YEAR))
-                set(Calendar.MONTH, it.get(Calendar.MONTH))
-                set(Calendar.DAY_OF_MONTH, it.get(Calendar.DAY_OF_MONTH))
-                set(Calendar.HOUR_OF_DAY, 12)
-            }
-        }
-        return Duration.ofMillis(dueDate.timeInMillis - System.currentTimeMillis())
-    }
 }
