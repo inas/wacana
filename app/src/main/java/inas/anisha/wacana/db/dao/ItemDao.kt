@@ -1,19 +1,19 @@
 package inas.anisha.wacana.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import inas.anisha.wacana.db.entity.ItemEntity
 
 @Dao
 interface ItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertItem(item: ItemEntity)
+    fun insertItem(vararg item: ItemEntity)
 
-    @Delete
-    fun deleteItems(vararg item: ItemEntity)
-
-    @Query("DELETE FROM item WHERE item_id = :itemId")
-    fun deleteItem(itemId: Long)
+    @Query("DELETE FROM item WHERE trip_id = :tripId")
+    fun deleteItems(tripId: Long)
 
     @Query("SELECT * from item WHERE trip_id = :tripId")
     fun getAllItems(tripId: Long): LiveData<List<ItemEntity>>

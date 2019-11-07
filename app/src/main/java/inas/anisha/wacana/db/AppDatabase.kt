@@ -10,9 +10,10 @@ import inas.anisha.wacana.db.dao.DocumentDao
 import inas.anisha.wacana.db.dao.ItemDao
 import inas.anisha.wacana.db.dao.TripDao
 import inas.anisha.wacana.db.entity.DocumentEntity
+import inas.anisha.wacana.db.entity.ItemEntity
 import inas.anisha.wacana.db.entity.TripEntity
 
-@Database(entities = [TripEntity::class, DocumentEntity::class], version = 1)
+@Database(entities = [TripEntity::class, DocumentEntity::class, ItemEntity::class], version = 1)
 @TypeConverters(CalendarConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

@@ -21,8 +21,9 @@ import inas.anisha.wacana.preferences.AppPreference
 import inas.anisha.wacana.ui.newTrip.NewTripActivity
 import inas.anisha.wacana.workers.NotificationWorker
 import inas.anisha.wacana.workers.WeatherWorker
+import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
@@ -135,7 +136,7 @@ class Repository(application: Application) {
     fun addTrip(trip: TripEntity) {
         Observable.fromCallable { tripDao.insert(trip) }
             .subscribeOn(Schedulers.io())
-            .subscribe(Consumer { id ->
+            .subscribe({ id ->
                 tripDao.getTripById(id).let {
                     scheduleNotification(it.destination, it.startDate)
                 }
@@ -176,14 +177,16 @@ class Repository(application: Application) {
             .subscribeOn(Schedulers.io()).blockingSingle()
     }
 
-    fun insertItem(item: ItemEntity) {
-        Observable.fromCallable { itemDao.insertItem(item) }
-            .subscribeOn(Schedulers.io()).subscribe()
-    }
+    fun insertItems(items: MutableList<ItemEntity>, tripId: Long) {
+        val deleteAllCompletable = Completable.fromAction { itemDao.deleteItems(tripId) }
+        val insertAllCompletable =
+            Completable.fromAction { itemDao.insertItem(*items.toTypedArray()) }
 
-    fun deleteItem(itemId: Long) {
-        Observable.fromCallable { itemDao.deleteItem(itemId) }
-            .subscribeOn(Schedulers.io()).subscribe()
+        deleteAllCompletable
+            .andThen(insertAllCompletable)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     private fun scheduleNotification(destination: String, startDate: Calendar) {

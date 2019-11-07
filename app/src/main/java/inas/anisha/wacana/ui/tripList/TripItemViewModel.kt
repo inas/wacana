@@ -7,7 +7,6 @@ import java.util.*
 
 class TripItemViewModel : ViewModel() {
 
-    var tripId: String = "id"
     var destination: String = ""
     var startDate: String = ""
     var endDate: String? = null

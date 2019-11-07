@@ -14,7 +14,7 @@ import androidx.room.PrimaryKey
 )
 data class ItemEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "item_id") val id: Long,
-    @ColumnInfo(name = "item") val item: String,
-    @ColumnInfo(name = "isSelected") val isSelected: Boolean,
+    @ColumnInfo(name = "item_name") val itemName: String,
+    @ColumnInfo(name = "is_selected") val isSelected: Boolean,
     @ColumnInfo(name = "trip_id") val tripId: Long
 )

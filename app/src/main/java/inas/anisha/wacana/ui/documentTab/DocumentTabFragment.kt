@@ -23,12 +23,12 @@ import inas.anisha.wacana.util.FileUtil
 
 class DocumentTabFragment : Fragment() {
 
-    private lateinit var viewModel: BaggageTabViewModel
+    private lateinit var viewModel: DocumentTabViewModel
     private lateinit var binding: FragmentTabDocumentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(BaggageTabViewModel::class.java).apply {
+        viewModel = ViewModelProviders.of(this).get(DocumentTabViewModel::class.java).apply {
             initViewModel(arguments?.getLong(TRIP_ID))
         }
     }

@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout>
 
-    <androidx.appcompat.widget.AppCompatCheckedTextView
-        android:layout_width=""
-        android:layout_height=""
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+        <variable
+            name="viewModel"
+            type="inas.anisha.wacana.ui.baggageTab.BaggageItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/baggage_item_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:checked="@{viewModel.isChecked}"
+            android:enabled="@{viewModel.isEnabled}"
+            android:saveEnabled="false"
+            android:text="@{viewModel.itemName}"
+            android:textColor="@drawable/checkbox_selector"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/baggage_item_button_remove"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Formal shirts (5 pairs)" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/baggage_item_button_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:src="@drawable/ic_close_black_24dp"
+            android:tint="@color/transparentBlack"
+            android:visibility="@{viewModel.isVisible}"
+            app:layout_constraintBottom_toBottomOf="@id/baggage_item_checkbox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/baggage_item_checkbox" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
