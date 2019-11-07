@@ -23,6 +23,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var weatherDescription: String = ""
     var temperature: String = ""
 
+    fun initViewModel() {
+        val lat = Repository.getInstance(getApplication()).getLatitude()
+        val lon = Repository.getInstance(getApplication()).getLongitude()
+        if (lat != null && lon != null) {
+            Repository.getInstance(getApplication()).getCurrentWeather(lat, lon)
+        }
+    }
+
     fun getTripItemVMList(tripEntityList: List<TripEntity>): List<TripItemViewModel> {
         tripItemViewModelList = tripEntityList.map {
             TripItemViewModel().apply {
@@ -45,8 +53,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             tripItemViewModelList[newTripIndex].isSelected.value = true
     }
 
-    fun getCurrentWeather(lat: Double, long: Double) {
-        Repository.getInstance(getApplication()).getCurrentWeather(lat.toString(), long.toString())
+    fun saveLocationCoordinates(lat: Double, lon: Double) {
+        Repository.getInstance(getApplication())
+            .saveLocationCoordinates(lat.toString(), lon.toString())
+    }
+
+    fun getCurrentWeather(lat: Double, lon: Double) {
+        Repository.getInstance(getApplication()).getCurrentWeather(lat.toString(), lon.toString())
     }
 
     fun updateWeather(response: WeatherResponse) {

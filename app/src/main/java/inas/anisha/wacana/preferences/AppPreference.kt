@@ -7,11 +7,22 @@ class AppPreference(mContext: Context) {
     private val mSharedPreferences: SharedPreferences =
         mContext.getSharedPreferences("wacana_data", Context.MODE_PRIVATE)
 
+    val latitude: String? = mSharedPreferences.getString(LATITUDE, null)
+
+    val longitude: String? = mSharedPreferences.getString(LONGITUDE, null)
+
     val location: String? = mSharedPreferences.getString(LOCATION, null)
 
     val weather: String? = mSharedPreferences.getString(WEATHER, null)
 
     val temperature: String? = mSharedPreferences.getString(TEMPERATURE, null)
+
+    fun saveLocationCoordinates(lat: String?, lon: String?) {
+        if (lat != null && lon != null) {
+            setValue(LATITUDE, lat)
+            setValue(LONGITUDE, lon)
+        }
+    }
 
     fun saveLocation(location: String?) {
         location?.let { setValue(LOCATION, it) }
@@ -34,6 +45,8 @@ class AppPreference(mContext: Context) {
     }
 
     companion object {
+        private const val LATITUDE = "latitude"
+        private const val LONGITUDE = "longitude"
         private const val LOCATION = "location"
         private const val WEATHER = "weather"
         private const val TEMPERATURE = "temperature"

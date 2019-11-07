@@ -61,6 +61,13 @@ class Repository(application: Application) {
         workManager = WorkManager.getInstance(application)
     }
 
+    fun getLatitude() = sharedPreference.latitude
+    fun getLongitude() = sharedPreference.longitude
+
+    fun saveLocationCoordinates(lat: String, lon: String) {
+        sharedPreference.saveLocationCoordinates(lat, lon)
+    }
+
     fun getCurrentWeather(lat: String, lon: String) {
         weatherService.getCurrentWeather(lat, lon, API_KEY)
             .enqueue(object : Callback<WeatherResponse> {
