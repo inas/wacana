@@ -70,6 +70,6 @@ class GpsUtil(private val context: Context) {
     }
 
     interface OnGpsListener {
-        fun gpsStatus(isGPSEnable: Boolean)
+        fun gpsStatus(isGPSEnabled: Boolean)
     }
 }

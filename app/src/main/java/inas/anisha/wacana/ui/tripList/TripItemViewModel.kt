@@ -13,8 +13,5 @@ class TripItemViewModel : ViewModel() {
     var isSelected: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply { value = false }
     var tripEntity: TripEntity = TripEntity(0, "", Calendar.getInstance(), Calendar.getInstance())
 
-    fun getDate(): String {
-        var date = startDate + (if (endDate != null) " - $endDate" else "")
-        return date
-    }
+    fun getDate() = startDate + (if (endDate != null) " - $endDate" else "")
 }

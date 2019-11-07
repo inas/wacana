@@ -1,12 +1,11 @@
 package inas.anisha.wacana.ui.tripDetail
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import inas.anisha.wacana.db.entity.TripEntity
 import org.apache.commons.lang3.time.DateUtils
 import java.text.SimpleDateFormat
 
-class TripDetailViewModel(application: Application) : AndroidViewModel(application) {
+class TripDetailViewModel : ViewModel() {
     var destination: String = ""
     var date: String = ""
 

@@ -8,6 +8,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 
+/*
+ * author: https://proandroiddev.com/android-tutorial-on-location-update-with-livedata-774f8fcc9f15
+ */
 class LocationLiveData(context: Context) : LiveData<LocationModel>() {
 
     private var fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -16,7 +19,6 @@ class LocationLiveData(context: Context) : LiveData<LocationModel>() {
         super.onInactive()
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
-
 
     override fun onActive() {
         super.onActive()

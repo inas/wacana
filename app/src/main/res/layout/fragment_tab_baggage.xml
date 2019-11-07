@@ -6,10 +6,12 @@
 
     <data>
 
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="inas.anisha.wacana.ui.baggageTab.BaggageTabViewModel" />
     </data>
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -48,7 +50,7 @@
                     android:layout_marginLeft="4dp"
                     android:src="@drawable/ic_add_white_24dp"
                     android:tint="@color/transparentBlack"
-                    android:visibility="invisible"
+                    android:visibility="@{viewModel.isInEditMode() ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintStart_toStartOf="@id/tab_baggage_recycler_view"
                     app:layout_constraintTop_toBottomOf="@id/tab_baggage_recycler_view" />
 
@@ -62,7 +64,7 @@
                     android:maxLines="1"
                     android:minWidth="180dp"
                     android:textSize="16sp"
-                    android:visibility="invisible"
+                    android:visibility="@{viewModel.isInEditMode() ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/tab_baggage_image_view_add"
                     app:layout_constraintStart_toEndOf="@id/tab_baggage_image_view_add"
                     app:layout_constraintTop_toTopOf="@id/tab_baggage_image_view_add"
@@ -73,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="edit"
-                    android:visibility="visible"
+                    android:visibility="@{viewModel.isInEditMode() ? View.INVISIBLE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tab_baggage_edit_text" />
@@ -83,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="save"
-                    android:visibility="invisible"
+                    android:visibility="@{viewModel.isInEditMode() ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tab_baggage_edit_text" />
@@ -94,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="cancel"
-                    android:visibility="invisible"
+                    android:visibility="@{viewModel.isInEditMode() ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tab_baggage_button_save" />

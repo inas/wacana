@@ -31,11 +31,11 @@ class ImageGridAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.setOnClickListener { clickListener.onItemClick(position) }
+        holder.itemView.setOnClickListener { clickListener.onItemClick(holder.adapterPosition) }
         val data = data[position]
         Glide.with(context)
             .load(File(data))
-            .into(binding.imageGridItemImageView)
+            .into(holder.binding.imageGridItemImageView)
     }
 
     inner class ViewHolder(val binding: ImageGridItemBinding) :

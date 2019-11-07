@@ -81,13 +81,13 @@ class NewTripActivity : AppCompatActivity() {
                 viewModel.endDate.value = it[it.size - 1]
             })
             .setPickerType(RANGE_PICKER)
-            .setDate(Calendar.getInstance()) // Initial date as Calendar object
+            .setDate(Calendar.getInstance())
             .setMinimumDate(Calendar.getInstance().also {
                 it.add(
                     Calendar.DATE,
                     -1
                 )
-            }) // Minimum available date
+            })
 
         datePickerDialog.build().show()
     }

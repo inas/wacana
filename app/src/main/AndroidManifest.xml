@@ -30,9 +30,6 @@
             android:label="@string/title_item_detail"
             android:parentActivityName=".ui.home.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="inas.anisha.wacana.ui.home.HomeActivity" />
         </activity>
         <activity
             android:name=".ui.newTrip.NewTripActivity"

@@ -73,30 +73,7 @@ class DocumentTabFragment : Fragment() {
 
         viewModel.documentList.observe(this, Observer {
             val data = viewModel.getUris(it)
-            requireContext().let { context ->
-                binding.tabDocumentRecyclerView.adapter =
-                    ImageGridAdapter(context, data,
-                        object :
-                            ImageGridAdapter.OnItemClickListener {
-                            override fun onItemClick(position: Int) {
-                                fragmentManager?.beginTransaction()?.let { ft ->
-                                    ImageDialogFragment().apply {
-                                        arguments = Bundle().apply {
-                                            putString(
-                                                ImageDialogFragment.FILE_PATH,
-                                                this@DocumentTabFragment.viewModel.uriList[position]
-                                            )
-                                            putLong(
-                                                ImageDialogFragment.IMAGE_ID,
-                                                this@DocumentTabFragment.viewModel.imageIdList[position]
-                                            )
-                                        }
-                                    }.show(ft, "")
-                                }
-                            }
-                        })
-            }
-
+            (binding.tabDocumentRecyclerView.adapter as ImageGridAdapter).updateList(data)
         })
 
         binding.tabDocumentFab.setOnClickListener { browseImage() }
@@ -112,7 +89,7 @@ class DocumentTabFragment : Fragment() {
         }
     }
 
-    fun browseImage() {
+    private fun browseImage() {
         requireContext().let { context ->
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -135,10 +112,11 @@ class DocumentTabFragment : Fragment() {
         }
     }
 
-    fun openGallery() {
+    private fun openGallery() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_PICK
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
         startActivityForResult(
             Intent.createChooser(intent, "Select Picture"),
             IMAGE_GALLERY_REQUEST
@@ -151,7 +129,6 @@ class DocumentTabFragment : Fragment() {
     ) {
         when (requestCode) {
             PERMISSION_REQUEST_READ_EXTERNAL_STORAGE -> {
-                // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     openGallery()
                 }

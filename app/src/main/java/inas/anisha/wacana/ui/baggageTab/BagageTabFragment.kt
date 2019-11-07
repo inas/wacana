@@ -33,6 +33,8 @@ class BaggageTabFragment : Fragment() {
     ): View? {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_tab_baggage, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         initRecyclerView()
 
@@ -76,22 +78,6 @@ class BaggageTabFragment : Fragment() {
             )
             binding.tabBaggageTextViewNoItems.visibility =
                 if (viewModel.itemViewModels.isEmpty()) View.VISIBLE else View.INVISIBLE
-        })
-
-        viewModel.isInEditMode.observe(this, Observer { isInEditMode ->
-            if (isInEditMode) {
-                binding.tabBaggageImageViewAdd.visibility = View.VISIBLE
-                binding.tabBaggageEditText.visibility = View.VISIBLE
-                binding.tabBaggageButtonSave.visibility = View.VISIBLE
-                binding.tabBaggageButtonCancel.visibility = View.VISIBLE
-                binding.tabBaggageButtonEdit.visibility = View.INVISIBLE
-            } else {
-                binding.tabBaggageImageViewAdd.visibility = View.INVISIBLE
-                binding.tabBaggageEditText.visibility = View.INVISIBLE
-                binding.tabBaggageButtonSave.visibility = View.INVISIBLE
-                binding.tabBaggageButtonCancel.visibility = View.INVISIBLE
-                binding.tabBaggageButtonEdit.visibility = View.VISIBLE
-            }
         })
 
         return binding.root

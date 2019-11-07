@@ -1,7 +1,6 @@
 package inas.anisha.wacana.ui.home
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,7 +11,6 @@ import android.content.res.Configuration
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -34,9 +32,9 @@ import kotlinx.android.synthetic.main.trip_list.*
 
 class HomeActivity : AppCompatActivity() {
 
-    lateinit var viewModel: HomeViewModel
-    lateinit var binding: ActivityHomeBinding
-    lateinit var gpsReceiver: BroadcastReceiver
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var binding: ActivityHomeBinding
+    private lateinit var gpsReceiver: BroadcastReceiver
 
     private var twoPane: Boolean = false
     private var isGPSEnabled = false
@@ -112,7 +110,11 @@ class HomeActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == GPS_REQUEST) {
-                isGPSEnabled = true
+                GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
+                    override fun gpsStatus(isGPSEnabled: Boolean) {
+                        this@HomeActivity.isGPSEnabled = isGPSEnabled
+                    }
+                })
                 invokeLocationAction()
             }
         }
@@ -164,7 +166,6 @@ class HomeActivity : AppCompatActivity() {
     private fun selectFirstItem(handler: Handler, recyclerView: RecyclerView) {
         handler.post {
             if (!recyclerView.isComputingLayout) {
-                // This will call first item by calling "performClick()" of view.
                 recyclerView.findViewHolderForLayoutPosition(0)
                     ?.let { it as TripRecyclerViewAdapter.ViewHolder }
                     ?.itemView?.performClick()
@@ -202,11 +203,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun invokeLocationAction() {
         when {
-            !isGPSEnabled -> Log.d("debugweather", "gps ga enabled")
-
             isPermissionsGranted() -> startLocationUpdate()
-
-            shouldShowRequestPermissionRationale() -> Log.d("debugweather", "request dong :(")
 
             else -> ActivityCompat.requestPermissions(
                 this,
@@ -236,16 +233,6 @@ class HomeActivity : AppCompatActivity() {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
 
-    private fun shouldShowRequestPermissionRationale() =
-        ActivityCompat.shouldShowRequestPermissionRationale(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) && ActivityCompat.shouldShowRequestPermissionRationale(
-            this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-
-    @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,

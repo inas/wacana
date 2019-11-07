@@ -14,22 +14,12 @@ import inas.anisha.wacana.db.entity.TripEntity
 import inas.anisha.wacana.ui.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_trip_detail.*
 
-
-/**
- * A fragment representing a single Item detail screen.
- * This fragment is either contained in a [HomeActivity]
- * in two-pane mode (on tablets) or a [TripDetailActivity]
- * on handsets.
- */
 class TripDetailTabLayoutFragment : Fragment() {
 
     lateinit var binding: TripDetailTabLayoutBinding
 
-    var sectionsPagerAdapter: SectionsPagerAdapter? = null
+    private var sectionsPagerAdapter: SectionsPagerAdapter? = null
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
     private var item: TripEntity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +27,6 @@ class TripDetailTabLayoutFragment : Fragment() {
 
         arguments?.let {
             if (it.containsKey(ARG_TRIP_ID)) {
-                // Load the dummy content specified by the fragment
-                // arguments. In a real-world scenario, use a Loader
-                // to load content from a content provider.
                 item = it.getParcelable(ARG_TRIP_ID) as TripEntity
                 activity?.toolbar_layout?.title = item?.destination
             }
@@ -68,10 +55,6 @@ class TripDetailTabLayoutFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * The fragment argument representing the item ID that this fragment
-         * represents.
-         */
-        const val ARG_TRIP_ID = "trip_id"
+        const val ARG_TRIP_ID = "TRIP_ID"
     }
 }
