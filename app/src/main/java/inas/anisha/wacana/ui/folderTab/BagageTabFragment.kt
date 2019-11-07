@@ -13,7 +13,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.FragmentTabDocumentBinding
@@ -21,7 +20,7 @@ import inas.anisha.wacana.ui.home.HomeActivity
 import inas.anisha.wacana.ui.tripDetail.TripDetailActivity
 import inas.anisha.wacana.util.FileUtil
 
-class DocumentTabFragment : Fragment() {
+class BaggageTabFragment : Fragment() {
 
     private lateinit var viewModel: BaggageTabViewModel
     private lateinit var binding: FragmentTabDocumentBinding
@@ -47,57 +46,8 @@ class DocumentTabFragment : Fragment() {
                         it.resources.displayMetrics
                     ).toInt()
                 )
-            binding.tabDocumentRecyclerView.adapter =
-                ImageGridAdapter(it, viewModel.uriList,
-                    object :
-                        ImageGridAdapter.OnItemClickListener {
-                        override fun onItemClick(position: Int) {
-                            fragmentManager?.beginTransaction()?.let { ft ->
-                                ImageDialogFragment().apply {
-                                    arguments = Bundle().apply {
-                                        putString(
-                                            ImageDialogFragment.FILE_PATH,
-                                            this@DocumentTabFragment.viewModel.uriList[position]
-                                        )
-                                        putLong(
-                                            ImageDialogFragment.IMAGE_ID,
-                                            this@DocumentTabFragment.viewModel.imageIdList[position]
-                                        )
-                                    }
-                                }.show(ft, "")
-                            }
-                        }
-                    })
 
         }
-
-        viewModel.documentList.observe(this, Observer {
-            val data = viewModel.getUris(it)
-            requireContext().let { context ->
-                binding.tabDocumentRecyclerView.adapter =
-                    ImageGridAdapter(context, data,
-                        object :
-                            ImageGridAdapter.OnItemClickListener {
-                            override fun onItemClick(position: Int) {
-                                fragmentManager?.beginTransaction()?.let { ft ->
-                                    ImageDialogFragment().apply {
-                                        arguments = Bundle().apply {
-                                            putString(
-                                                ImageDialogFragment.FILE_PATH,
-                                                this@DocumentTabFragment.viewModel.uriList[position]
-                                            )
-                                            putLong(
-                                                ImageDialogFragment.IMAGE_ID,
-                                                this@DocumentTabFragment.viewModel.imageIdList[position]
-                                            )
-                                        }
-                                    }.show(ft, "")
-                                }
-                            }
-                        })
-            }
-
-        })
 
         binding.tabDocumentFab.setOnClickListener { browseImage() }
         return binding.root

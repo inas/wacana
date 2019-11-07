@@ -12,8 +12,10 @@ import inas.anisha.wacana.apiProvider.retrofit.WeatherService
 import inas.anisha.wacana.apiProvider.retrofit.WeatherService.Companion.API_KEY
 import inas.anisha.wacana.db.AppDatabase
 import inas.anisha.wacana.db.dao.DocumentDao
+import inas.anisha.wacana.db.dao.ItemDao
 import inas.anisha.wacana.db.dao.TripDao
 import inas.anisha.wacana.db.entity.DocumentEntity
+import inas.anisha.wacana.db.entity.ItemEntity
 import inas.anisha.wacana.db.entity.TripEntity
 import inas.anisha.wacana.preferences.AppPreference
 import inas.anisha.wacana.ui.newTrip.NewTripActivity
@@ -48,6 +50,7 @@ class Repository(application: Application) {
 
     var tripDao: TripDao
     var documentDao: DocumentDao
+    var itemDao: ItemDao
     var weatherService: WeatherService
     var weather: MutableLiveData<WeatherResponse>
     var sharedPreference: AppPreference
@@ -57,6 +60,7 @@ class Repository(application: Application) {
         val db = AppDatabase.getDatabase(application)
         tripDao = db.tripDao()
         documentDao = db.documentDao()
+        itemDao = db.itemDao()
         weatherService =
             RetrofitRequest.getWeatherRetrofitInstance().create(WeatherService::class.java)
         weather = MutableLiveData()
@@ -147,11 +151,6 @@ class Repository(application: Application) {
         Observable.fromCallable { tripDao.deleteAll() }.subscribeOn(Schedulers.io()).subscribe()
     }
 
-    fun getAllDocuments(): LiveData<List<DocumentEntity>> {
-        return Observable.fromCallable { documentDao.getAllDocuments() }
-            .subscribeOn(Schedulers.io()).blockingSingle()
-    }
-
     fun getAllDocuments(tripId: Long): LiveData<List<DocumentEntity>> {
         return Observable.fromCallable { documentDao.getAllDocuments(tripId) }
             .subscribeOn(Schedulers.io()).blockingSingle()
@@ -172,6 +171,20 @@ class Repository(application: Application) {
             .subscribeOn(Schedulers.io()).subscribe()
     }
 
+    fun getAllItems(tripId: Long): LiveData<List<ItemEntity>> {
+        return Observable.fromCallable { itemDao.getAllItems(tripId) }
+            .subscribeOn(Schedulers.io()).blockingSingle()
+    }
+
+    fun insertItem(item: ItemEntity) {
+        Observable.fromCallable { itemDao.insertItem(item) }
+            .subscribeOn(Schedulers.io()).subscribe()
+    }
+
+    fun deleteItem(itemId: Long) {
+        Observable.fromCallable { itemDao.deleteItem(itemId) }
+            .subscribeOn(Schedulers.io()).subscribe()
+    }
 
     private fun scheduleNotification(destination: String, startDate: Calendar) {
         val inputData = Data.Builder().apply {

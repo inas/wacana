@@ -6,16 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import inas.anisha.wacana.Repository
 import inas.anisha.wacana.db.entity.DocumentEntity
-import inas.anisha.wacana.ui.documentTab.DocumentTabViewModel
+import inas.anisha.wacana.ui.documentTab.BaggageTabViewModel
 
 class TripDetailTabLayoutViewModel(application: Application) : AndroidViewModel(application) {
     var documents: LiveData<List<DocumentEntity>> = MutableLiveData()
-    var documentTabViewModel: DocumentTabViewModel =
-        DocumentTabViewModel(getApplication())
+    var baggageTabViewModel: BaggageTabViewModel =
+        BaggageTabViewModel(getApplication())
 
     fun initViewModel(tripId: Long) {
         documents = Repository.getInstance(getApplication()).getAllDocuments(tripId)
-        documentTabViewModel = DocumentTabViewModel(getApplication())
+        baggageTabViewModel = BaggageTabViewModel(getApplication())
             .apply {
             uriList = getDocumentUris(documents.value ?: mutableListOf())
             this.tripId = tripId
