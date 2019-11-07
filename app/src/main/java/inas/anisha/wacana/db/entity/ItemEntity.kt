@@ -3,10 +3,12 @@ package inas.anisha.wacana.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "item", foreignKeys = [ForeignKey(
+        onDelete = CASCADE,
         entity = TripEntity::class,
         parentColumns = ["id"],
         childColumns = ["trip_id"]

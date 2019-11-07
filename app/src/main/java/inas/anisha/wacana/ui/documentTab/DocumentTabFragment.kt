@@ -74,9 +74,10 @@ class DocumentTabFragment : Fragment() {
         viewModel.documentList.observe(this, Observer {
             val data = viewModel.getUris(it)
             (binding.tabDocumentRecyclerView.adapter as ImageGridAdapter).updateList(data)
+            binding.tabDocumentNoItems.visibility = if (data.isEmpty()) View.VISIBLE else View.GONE
         })
 
-        binding.tabDocumentFab.setOnClickListener { browseImage() }
+        binding.tabDocumentButton.setOnClickListener { browseImage() }
         return binding.root
     }
 

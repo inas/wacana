@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
+    private lateinit var repository: Repository
+
     var selectedTrip: Int = -1
     var tripItemViewModelList: List<TripItemViewModel> = mutableListOf()
     var tripEntity: LiveData<List<TripEntity>> =
@@ -26,8 +28,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun initViewModel() {
         val lat = Repository.getInstance(getApplication()).getLatitude()
         val lon = Repository.getInstance(getApplication()).getLongitude()
+        repository = Repository.getInstance(getApplication())
         if (lat != null && lon != null) {
-            Repository.getInstance(getApplication()).getCurrentWeather(lat, lon)
+            repository.getCurrentWeather(lat, lon)
         }
     }
 
@@ -54,18 +57,23 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun saveLocationCoordinates(lat: Double, lon: Double) {
-        Repository.getInstance(getApplication())
-            .saveLocationCoordinates(lat.toString(), lon.toString())
+        repository.saveLocationCoordinates(lat.toString(), lon.toString())
     }
 
     fun getCurrentWeather(lat: Double, lon: Double) {
-        Repository.getInstance(getApplication()).getCurrentWeather(lat.toString(), lon.toString())
+        repository.getCurrentWeather(lat.toString(), lon.toString())
     }
 
     fun updateWeather(response: WeatherResponse) {
         locationName = response.name ?: ""
         weatherDescription = response.weather[0].main ?: ""
         temperature = String.format("%.1f°C", ((response.main?.temp ?: 273.15f) - 273.15f))
+    }
+
+    fun deleteSelectedTrip() {
+        if (selectedTrip != -1) tripEntity.value?.get(selectedTrip)?.let {
+            repository.deleteTrip(it)
+        }
     }
 
 }

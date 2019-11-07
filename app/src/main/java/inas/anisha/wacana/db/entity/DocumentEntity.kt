@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "document", foreignKeys = [ForeignKey(
+        onDelete = ForeignKey.CASCADE,
         entity = TripEntity::class,
         parentColumns = ["id"],
         childColumns = ["trip_id"]

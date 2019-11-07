@@ -29,7 +29,6 @@ import inas.anisha.wacana.ui.tripList.TripRecyclerViewAdapter
 import inas.anisha.wacana.util.GpsUtil
 import kotlinx.android.synthetic.main.trip_list.*
 
-
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var viewModel: HomeViewModel
@@ -142,10 +141,16 @@ class HomeActivity : AppCompatActivity() {
             )
             val orientation = resources.configuration.orientation
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (tripDataList.isEmpty()) {
+                    supportFragmentManager.findFragmentById(R.id.trip_detail_container)?.let {
+                        supportFragmentManager.beginTransaction().remove(it).commit()
+                    }
+                }
                 viewModel.selectTrip(viewModel.tripItemViewModelList.size - 1)
                 selectFirstItem(Handler(), item_list)
             }
         })
+
     }
 
     private fun setupRecyclerView() {

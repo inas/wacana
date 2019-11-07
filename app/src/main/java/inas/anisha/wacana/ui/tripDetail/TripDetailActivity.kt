@@ -42,6 +42,11 @@ class TripDetailActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         viewModel.initViewModel(intent.getParcelableExtra(TripDetailTabLayoutFragment.ARG_TRIP_ID))
+
+        binding.tripDetailButtonDelete.setOnClickListener {
+            viewModel.deleteTrip()
+            finish()
+        }
     }
 
 }
