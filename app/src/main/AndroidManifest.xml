@@ -27,13 +27,11 @@
         </activity>
         <activity
             android:name=".ui.tripDetail.TripDetailActivity"
-            android:label="@string/title_item_detail"
             android:parentActivityName=".ui.home.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".ui.newTrip.NewTripActivity"
-            android:label="@string/title_activity_new_trip"
             android:parentActivityName=".ui.home.HomeActivity" />
     </application>
 

@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+/*
+ * author: https://stackoverflow.com/a/30256880/6463699
+ */
 class GridAutofitLayoutManager : GridLayoutManager {
     private var columnWidth: Int = 0
     private var isColumnWidthChanged = true

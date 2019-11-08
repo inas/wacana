@@ -26,7 +26,7 @@ class NewTripActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_trip, null)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Add New Trip"
+        supportActionBar?.title = resources.getText(R.string.title_activity_new_trip)
 
         viewModel = ViewModelProviders.of(this).get(NewTripViewModel::class.java)
         binding.viewModel = viewModel
@@ -67,10 +67,20 @@ class NewTripActivity : AppCompatActivity() {
         }
 
         viewModel.startDate.observe(this, androidx.lifecycle.Observer {
-            binding.editTextStartDate.setText(SimpleDateFormat("dd MMM yyyy").format(it.time))
+            binding.editTextStartDate
+                .setText(
+                    SimpleDateFormat(resources.getString(R.string.common_date_format_dd_mmm_yyyy)).format(
+                        it.time
+                    )
+                )
         })
         viewModel.endDate.observe(this, androidx.lifecycle.Observer {
-            binding.editTextEndDate.setText(SimpleDateFormat("dd MMM yyyy").format(it.time))
+            binding.editTextEndDate
+                .setText(
+                    SimpleDateFormat(resources.getString(R.string.common_date_format_dd_mmm_yyyy)).format(
+                        it.time
+                    )
+                )
         })
     }
 

@@ -50,9 +50,9 @@ class BaggageTabFragment : Fragment() {
                 if (viewModel.itemViewModels.isEmpty()) View.VISIBLE else View.INVISIBLE
         }
 
-        binding.tabBaggageEditText.setOnKeyListener { v, keyCode, event ->
+        binding.tabBaggageEditText.setOnKeyListener { _, keyCode, event ->
             if ((event.action == KeyEvent.ACTION_UP) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                val item = viewModel.addItem(binding.tabBaggageEditText.text.toString())
+                viewModel.addItem(binding.tabBaggageEditText.text.toString())
                 (baggageItemsRV.adapter as BaggageItemRecyclerViewAdapter).addItem()
                 binding.tabBaggageEditText.setText("")
                 true

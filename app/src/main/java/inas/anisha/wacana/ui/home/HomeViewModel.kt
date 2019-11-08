@@ -3,6 +3,7 @@ package inas.anisha.wacana.ui.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import inas.anisha.wacana.R
 import inas.anisha.wacana.Repository
 import inas.anisha.wacana.apiProvider.response.WeatherResponse
 import inas.anisha.wacana.db.entity.TripEntity
@@ -38,9 +39,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         tripItemViewModelList = tripEntityList.map {
             TripItemViewModel().apply {
                 destination = it.destination
-                startDate = SimpleDateFormat("dd MMM yyyy").format(it.startDate.time)
+                startDate = SimpleDateFormat(
+                    getApplication<Application>().resources.getString(R.string.common_date_format_dd_mmm_yyyy)
+                )
+                    .format(it.startDate.time)
                 endDate = if (DateUtils.isSameDay(it.startDate, it.endDate)) null else
-                    SimpleDateFormat("dd MMM yyyy").format(it.endDate.time)
+                    SimpleDateFormat(
+                        getApplication<Application>().resources
+                            .getString(R.string.common_date_format_dd_mmm_yyyy)
+                    ).format(it.endDate.time)
                 isSelected.value = false
                 tripEntity = it
             }

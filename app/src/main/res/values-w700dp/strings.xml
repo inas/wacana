@@ -2,9 +2,9 @@
 <resources>
     <string name="new_trip_destination">Destination</string>
     <string name="new_trip_start_date">Start Date</string>
-    <string name="common_dash">—</string>
+    <string name="common_dash" translatable="false">—</string>
     <string name="new_trip_end_date">End Date</string>
-    <string name="new_trip_add_destination">Add Destination</string>
+    <string name="new_trip_create_new_trip">Create trip</string>
     <string name="tab_baggage_no_items_added">No items added</string>
     <string name="tab_baggage_add_item">Add item</string>
     <string name="tab_baggage_edit">edit</string>
@@ -13,4 +13,5 @@
     <string name="tab_document_no_documents_added">No documents added</string>
     <string name="tab_document_add_document">Add document</string>
     <string name="trip_list_add_new_trip">Add New Trip</string>
+    <string name="common_date_format_dd_mmm_yyyy">dd MMM yyyy</string>
 </resources>

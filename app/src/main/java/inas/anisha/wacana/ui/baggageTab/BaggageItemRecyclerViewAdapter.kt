@@ -33,7 +33,7 @@ class BaggageItemRecyclerViewAdapter(
         val item = holder.binding
         data[position].let {
             item.viewModel = it
-            item.baggageItemCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            item.baggageItemCheckbox.setOnCheckedChangeListener { _, isChecked ->
                 it.checkedState.value = isChecked
             }
             it.enabledState.observe(lifecycleOwner, Observer { enabled ->

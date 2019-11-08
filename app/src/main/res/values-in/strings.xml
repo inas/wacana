@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wacana</string>
+    <string name="new_trip_create_new_trip">"Buat perjalanan "</string>
+    <string name="new_trip_destination">Destinasi</string>
+    <string name="new_trip_end_date">Tanggal Pulang</string>
+    <string name="new_trip_start_date">Tanggal Berangkat</string>
+    <string name="tab_baggage_add_item">Tambah barang</string>
+    <string name="tab_baggage_cancel">batal</string>
+    <string name="tab_baggage_edit">ubah</string>
+    <string name="tab_baggage_no_items_added">Belum ada barang yang ditambahkan</string>
+    <string name="tab_baggage_save">simpan</string>
+    <string name="tab_document_add_document">Tambah dokumen</string>
+    <string name="tab_document_no_documents_added">Belum ada dokumen yang ditambahkan</string>
+    <string name="title_activity_new_trip">Tambah Perjalanan</string>
+    <string name="trip_list_add_new_trip">Tambah Perjalanan</string>
+</resources>

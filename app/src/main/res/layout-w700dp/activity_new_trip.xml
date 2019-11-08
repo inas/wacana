@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/colorAccent"
                 android:gravity="center_vertical"
-                android:text="@string/new_trip_add_destination"
+                android:text="@string/new_trip_create_new_trip"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/layout_date"
