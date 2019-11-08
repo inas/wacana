@@ -54,6 +54,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
+                        android:textColor="@color/black"
                         android:text="@{viewModel.date}"
                         android:textSize="16sp"
                         tools:text="Sep 2 2019 - Sep 5 2019" />
@@ -77,6 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
+            android:background="@color/colorSecondaryDark"
             android:src="@drawable/ic_delete_white_24dp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

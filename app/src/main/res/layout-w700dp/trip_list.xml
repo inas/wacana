@@ -101,7 +101,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@color/colorAccent"
                 android:text="@string/trip_list_add_new_trip"
                 android:textColor="@color/cardview_light_background"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -116,6 +115,7 @@
             android:layout_width="@dimen/item_width"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
+            android:background="@color/background"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -127,7 +127,6 @@
             android:id="@+id/divider"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/cardview_dark_background"
             app:layout_constraintEnd_toStartOf="@id/trip_detail_container"
             app:layout_constraintStart_toEndOf="@id/container_button_add_trip" />
 

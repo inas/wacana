@@ -111,7 +111,7 @@
                 android:id="@+id/button_add_trip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorAccent"
+                android:backgroundTint="@color/colorSecondary"
                 android:gravity="center_vertical"
                 android:text="@string/new_trip_create_new_trip"
                 app:layout_constraintBottom_toBottomOf="parent"

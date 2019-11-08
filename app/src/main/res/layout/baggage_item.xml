@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:src="@drawable/ic_close_black_24dp"
-            android:tint="@color/transparentBlack"
+            android:tint="@color/colorSecondaryLight"
             android:visibility="@{viewModel.isVisible}"
             app:layout_constraintBottom_toBottomOf="@id/baggage_item_checkbox"
             app:layout_constraintEnd_toEndOf="parent"

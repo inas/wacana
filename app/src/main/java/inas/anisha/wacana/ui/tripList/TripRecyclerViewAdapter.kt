@@ -33,8 +33,10 @@ class TripRecyclerViewAdapter(
         holder.binding.viewModel = data[position]
         holder.itemView.setOnClickListener { clickListener.onItemClick(position) }
         data[position].isSelected.observe(lifecycleOwner, Observer {
-            val color = context.resources.getColor(if (it) R.color.yellow else R.color.white)
-            holder.binding.tripListItemCard.setCardBackgroundColor(color)
+            val background = context.resources.getDrawable(
+                if (it) R.drawable.background_white_rounded_border_orange else R.drawable.background_white_rounded
+            )
+            holder.binding.tripListItemContainer.background = background
         })
     }
 
