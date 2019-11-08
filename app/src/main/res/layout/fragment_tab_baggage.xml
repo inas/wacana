@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
         <variable
             name="viewModel"
@@ -26,7 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="No items added"
+                    android:text="@string/tab_baggage_no_items_added"
                     android:textAlignment="center"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +58,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:hint="Add item"
+                    android:hint="@string/tab_baggage_add_item"
                     android:inputType="textShortMessage"
                     android:maxLines="1"
                     android:minWidth="180dp"
@@ -74,7 +73,7 @@
                     android:id="@+id/tab_baggage_button_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="edit"
+                    android:text="@string/tab_baggage_edit"
                     android:visibility="@{viewModel.isInEditMode() ? View.INVISIBLE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +83,7 @@
                     android:id="@+id/tab_baggage_button_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="save"
+                    android:text="@string/tab_baggage_save"
                     android:visibility="@{viewModel.isInEditMode() ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +94,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="cancel"
+                    android:text="@string/tab_baggage_cancel"
                     android:visibility="@{viewModel.isInEditMode() ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

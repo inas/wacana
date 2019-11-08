@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@color/colorAccent"
-                android:text="Add New Trip"
+                android:text="@string/trip_list_add_new_trip"
                 android:textColor="@color/cardview_light_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
