@@ -5,13 +5,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import inas.anisha.wacana.R
 import inas.anisha.wacana.ui.baggageTab.BaggageTabFragment
 import inas.anisha.wacana.ui.documentTab.DocumentTabFragment
-
-private val TAB_TITLES = arrayOf(
-    "tab 1",
-    "tab 2"
-)
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -27,26 +23,24 @@ class SectionsPagerAdapter(
     override fun getItem(position: Int): Fragment {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return when (position) {
-            0 -> DocumentTabFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(DocumentTabFragment.TRIP_ID, tripId)
-                }
+        return if (position == 0) DocumentTabFragment().apply {
+            arguments = Bundle().apply {
+                putLong(DocumentTabFragment.TRIP_ID, tripId)
             }
-            1 -> BaggageTabFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(BaggageTabFragment.TRIP_ID, tripId)
-                }
+        }
+        else BaggageTabFragment().apply {
+            arguments = Bundle().apply {
+                putLong(BaggageTabFragment.TRIP_ID, tripId)
             }
-            else -> PlaceholderFragment.newInstance(position + 1)
         }
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return TAB_TITLES[position]
+        return context.getString(if (position == 0) R.string.tab_document_title else R.string.tab_baggage_title)
     }
 
     override fun getCount(): Int {
         return 2
     }
+
 }

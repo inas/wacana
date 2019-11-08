@@ -1,6 +1,5 @@
 package inas.anisha.wacana.workers
 
-import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import inas.anisha.wacana.R
 import inas.anisha.wacana.ui.home.HomeActivity
 import inas.anisha.wacana.ui.newTrip.NewTripActivity.Companion.DESTINATION
 
@@ -72,7 +72,7 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
         //build the notification
         val notificationBuilder =
             NotificationCompat.Builder(applicationContext, WACANA_NOTIFICATION_CHANNEL)
-                .setSmallIcon(R.drawable.ic_dialog_alert)
+                .setSmallIcon(R.drawable.ic_notification_24dp)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationText)
                 .setContentIntent(intent)

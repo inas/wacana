@@ -1,18 +1,18 @@
 <resources>
     <string name="app_name" translatable="false">Wacana</string>
     <string name="title_activity_new_trip">Add New Trip</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
     <string name="new_trip_destination">Destination</string>
     <string name="new_trip_start_date">Start Date</string>
-    <string name="common_dash">—</string>
+    <string name="common_dash" translatable="false">—</string>
     <string name="new_trip_end_date">End Date</string>
     <string name="new_trip_create_new_trip">Create trip</string>
+    <string name="tab_baggage_title">baggage</string>
     <string name="tab_baggage_no_items_added">No items added</string>
     <string name="tab_baggage_add_item">Add item</string>
     <string name="tab_baggage_edit">edit</string>
     <string name="tab_baggage_save">save</string>
     <string name="tab_baggage_cancel">cancel</string>
+    <string name="tab_document_title">document</string>
     <string name="tab_document_no_documents_added">No documents added</string>
     <string name="tab_document_add_document">Add document</string>
     <string name="trip_list_add_new_trip">Add New Trip</string>

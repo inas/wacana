@@ -5,6 +5,7 @@
 
     <data>
 
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="inas.anisha.wacana.ui.home.HomeViewModel" />
@@ -147,6 +148,7 @@
                 android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
                 android:onClick="@{() -> viewModel.deleteSelectedTrip()}"
+                android:visibility="@{viewModel.tripEntity.size() > 0 ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/ic_delete_white_24dp" />
         </FrameLayout>
 

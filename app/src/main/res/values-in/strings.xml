@@ -14,4 +14,6 @@
     <string name="tab_document_no_documents_added">Belum ada dokumen yang ditambahkan</string>
     <string name="title_activity_new_trip">Tambah Perjalanan</string>
     <string name="trip_list_add_new_trip">Tambah Perjalanan</string>
+    <string name="tab_document_title">dokumen</string>
+    <string name="tab_baggage_title">bagasi</string>
 </resources>

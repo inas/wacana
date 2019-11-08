@@ -54,12 +54,12 @@ class HomeActivity : AppCompatActivity() {
                 this@HomeActivity.isGPSEnabled = isGPSEnabled
             }
         })
+        initViews()
     }
 
     override fun onStart() {
         super.onStart()
         twoPane = trip_detail_container != null
-        initViews()
         invokeLocationAction()
 
         viewModel.weather.observe(this, Observer {
@@ -139,8 +139,7 @@ class HomeActivity : AppCompatActivity() {
                     tripDataList
                 ).reversed()
             )
-            val orientation = resources.configuration.orientation
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (twoPane) {
                 if (tripDataList.isEmpty()) {
                     supportFragmentManager.findFragmentById(R.id.trip_detail_container)?.let {
                         supportFragmentManager.beginTransaction().remove(it).commit()
