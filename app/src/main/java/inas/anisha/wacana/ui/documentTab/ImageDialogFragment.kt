@@ -43,7 +43,7 @@ class ImageDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.imageView.scaleType = ImageView.ScaleType.FIT_CENTER
+        binding.fragmentDialogImageViewPlaceholder.scaleType = ImageView.ScaleType.FIT_CENTER
         binding.fragmentDialogImageViewClose.setOnClickListener { dismiss() }
         binding.fragmentDialogImageViewDelete.setOnClickListener {
             viewModel.removeImage()
@@ -62,7 +62,7 @@ class ImageDialogFragment : DialogFragment() {
         requireContext().let {
             Glide.with(it)
                 .load(viewModel.imageFilePath)
-                .into(binding.imageView)
+                .into(binding.fragmentDialogImageViewPlaceholder)
         }
 
     }

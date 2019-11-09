@@ -41,8 +41,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home, null)
-        setSupportActionBar(binding.toolbar)
-        binding.toolbar.title = title
+        setSupportActionBar(binding.homeToolbar)
+        binding.homeToolbar.title = title
 
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         viewModel.initViewModel()

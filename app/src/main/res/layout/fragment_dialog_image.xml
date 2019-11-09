@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@color/blackTransparent">
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/fragment_dialog_image_view_placeholder"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
