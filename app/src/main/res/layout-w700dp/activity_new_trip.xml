@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="inas.anisha.wacana.ui.newTrip.NewTripViewModel" />
+            type="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.newTrip.NewTripViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

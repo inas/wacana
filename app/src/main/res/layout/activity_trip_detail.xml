@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="inas.anisha.wacana.ui.tripDetail.TripDetailViewModel" />
+            type="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripDetail.TripDetailViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

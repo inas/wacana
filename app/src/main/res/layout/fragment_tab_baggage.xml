@@ -8,7 +8,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="inas.anisha.wacana.ui.baggageTab.BaggageTabViewModel" />
+            type="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.baggageTab.BaggageTabViewModel" />
     </data>
 
         <androidx.core.widget.NestedScrollView

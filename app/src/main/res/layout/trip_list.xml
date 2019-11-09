@@ -7,11 +7,10 @@
 
         <variable
             name="viewModel"
-            type="inas.anisha.wacana.ui.home.HomeViewModel" />
+            type="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:name="inas.anisha.wacana.ItemListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

@@ -8,7 +8,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="inas.anisha.wacana.ui.home.HomeViewModel" />
+            type="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -112,7 +112,6 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_list"
-            android:name="inas.anisha.wacana.ItemListFragment"
             android:layout_width="@dimen/item_width"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
@@ -121,7 +120,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/container_button_add_trip"
-            tools:context="inas.anisha.wacana.ui.home.HomeActivity"
+            tools:context="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.home.HomeActivity"
             tools:listitem="@layout/trip_list_item" />
 
         <View

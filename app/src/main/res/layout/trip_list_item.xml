@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="inas.anisha.wacana.ui.tripList.TripItemViewModel" />
+            type="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripList.TripItemViewModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
