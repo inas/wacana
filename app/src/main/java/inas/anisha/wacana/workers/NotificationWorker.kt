@@ -65,7 +65,7 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
         //get latest event details
         val destination = inputData.getString(DESTINATION)
         val notificationTitle =
-            if (destination != null) "Get ready for your trip to " + destination + "!" else
+            if (destination != null && destination.isNotEmpty()) "Get ready for your trip to " + destination + "!" else
                 "Get ready for your trip!"
         val notificationText = "Start packing now"
 

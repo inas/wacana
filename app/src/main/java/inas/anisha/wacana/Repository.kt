@@ -138,14 +138,16 @@ class Repository(application: Application) {
             .subscribeOn(Schedulers.io())
             .subscribe({ id ->
                 tripDao.getTripById(id).let {
-                    scheduleNotification(it.destination, it.startDate)
+                    scheduleNotification(it.destination, it.startDate, id)
                 }
             })
     }
 
     fun deleteTrip(trip: TripEntity) {
         Observable.fromCallable { tripDao.deleteTrip(trip) }.subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe({
+                workManager.cancelAllWorkByTag(NewTripActivity.TRIP_NOTIFICATION + trip.id)
+            })
     }
 
     fun clearTrip() {
@@ -189,14 +191,14 @@ class Repository(application: Application) {
             .subscribe()
     }
 
-    private fun scheduleNotification(destination: String, startDate: Calendar) {
+    private fun scheduleNotification(destination: String, startDate: Calendar, id: Long) {
         val inputData = Data.Builder().apply {
             putString(NewTripActivity.DESTINATION, destination)
         }.build()
         val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInitialDelay(calculateDelay(startDate))
             .setInputData(inputData)
-            .addTag(NewTripActivity.TRIP_NOTIFICATION)
+            .addTag(NewTripActivity.TRIP_NOTIFICATION + id.toString())
             .build()
 
         workManager.enqueue(notificationWork)
