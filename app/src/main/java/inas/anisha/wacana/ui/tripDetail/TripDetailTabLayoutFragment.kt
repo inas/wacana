@@ -11,7 +11,6 @@ import com.google.android.material.tabs.TabLayout
 import inas.anisha.wacana.R
 import inas.anisha.wacana.databinding.TripDetailTabLayoutBinding
 import inas.anisha.wacana.db.entity.TripEntity
-import inas.anisha.wacana.ui.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_trip_detail.*
 
 class TripDetailTabLayoutFragment : Fragment() {
@@ -43,7 +42,11 @@ class TripDetailTabLayoutFragment : Fragment() {
         requireActivity().let {
             requireFragmentManager().let { fm ->
                 sectionsPagerAdapter =
-                    SectionsPagerAdapter(it, childFragmentManager, item?.id ?: 0)
+                    SectionsPagerAdapter(
+                        it,
+                        childFragmentManager,
+                        item?.id ?: 0
+                    )
                 val viewPager: ViewPager = binding.viewPager
                 viewPager.adapter = sectionsPagerAdapter
                 val tabs: TabLayout = binding.tabs

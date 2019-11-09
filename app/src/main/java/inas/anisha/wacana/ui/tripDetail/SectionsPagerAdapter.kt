@@ -1,4 +1,4 @@
-package inas.anisha.wacana.ui.ui.main
+package inas.anisha.wacana.ui.tripDetail
 
 import android.content.Context
 import android.os.Bundle
