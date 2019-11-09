@@ -1,12 +1,15 @@
 package id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.util
 
+import android.Manifest
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.IntentSender
+import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationServices
@@ -46,16 +49,22 @@ class GpsUtil(private val context: Context) {
                 }
                 .addOnFailureListener(context) { e ->
                     when ((e as ApiException).statusCode) {
-                        LocationSettingsStatusCodes.RESOLUTION_REQUIRED ->
-
-                            try {
-                                // Show the dialog by calling startResolutionForResult(), and check the
-                                // result in onActivityResult().
-                                val rae = e as ResolvableApiException
-                                rae.startResolutionForResult(context, GPS_REQUEST)
-                            } catch (sie: IntentSender.SendIntentException) {
-                                Log.i(TAG, "PendingIntent unable to execute request.")
+                        LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                            if (ActivityCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.ACCESS_FINE_LOCATION
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                try {
+                                    // Show the dialog by calling startResolutionForResult(), and check the
+                                    // result in onActivityResult().
+                                    val rae = e as ResolvableApiException
+                                    rae.startResolutionForResult(context, GPS_REQUEST)
+                                } catch (sie: IntentSender.SendIntentException) {
+                                    Log.i(TAG, "PendingIntent unable to execute request.")
+                                }
                             }
+                        }
 
                         LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
                             val errorMessage =

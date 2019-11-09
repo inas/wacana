@@ -128,12 +128,9 @@ class DocumentTabFragment : Fragment() {
         requestCode: Int,
         permissions: Array<String>, grantResults: IntArray
     ) {
-        when (requestCode) {
-            PERMISSION_REQUEST_READ_EXTERNAL_STORAGE -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    openGallery()
-                }
-                return
+        if (requestCode == PERMISSION_REQUEST_READ_EXTERNAL_STORAGE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                openGallery()
             }
         }
     }

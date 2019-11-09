@@ -49,18 +49,26 @@ class HomeActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
-            override fun gpsStatus(isGPSEnabled: Boolean) {
-                this@HomeActivity.isGPSEnabled = isGPSEnabled
+        if (savedInstanceState == null) {
+            if (!isPermissionsGranted()) {
+                requestPermission()
+            } else {
+                GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
+                    override fun gpsStatus(isGPSEnabled: Boolean) {
+                        this@HomeActivity.isGPSEnabled = isGPSEnabled
+                    }
+                })
             }
-        })
-        initViews()
+        }
     }
 
     override fun onStart() {
         super.onStart()
+        if (isPermissionsGranted() && isGPSEnabled) startLocationUpdate()
+
         twoPane = trip_detail_container != null
-        invokeLocationAction()
+
+        initViews()
 
         viewModel.weather.observe(this, Observer {
             viewModel.updateWeather(it)
@@ -81,12 +89,10 @@ class HomeActivity : AppCompatActivity() {
                         val locationManager =
                             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                            GpsUtil(context).turnGPSOn(object : GpsUtil.OnGpsListener {
-                                override fun gpsStatus(isGPSEnabled: Boolean) {
-                                    this@HomeActivity.isGPSEnabled = isGPSEnabled
-                                }
-                            })
-                            invokeLocationAction()
+                            isGPSEnabled = true
+                            if (isPermissionsGranted()) startLocationUpdate()
+                        } else {
+                            isGPSEnabled = false
                         }
                     }
                 }
@@ -109,12 +115,7 @@ class HomeActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == GPS_REQUEST) {
-                GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
-                    override fun gpsStatus(isGPSEnabled: Boolean) {
-                        this@HomeActivity.isGPSEnabled = isGPSEnabled
-                    }
-                })
-                invokeLocationAction()
+                startLocationUpdate()
             }
         }
     }
@@ -194,6 +195,7 @@ class HomeActivity : AppCompatActivity() {
                 .replace(R.id.trip_detail_container, fragment)
                 .commit()
         } else {
+            viewModel.selectTrip(-1)
             val intent =
                 Intent(this@HomeActivity, TripDetailActivity::class.java).apply {
                     putExtra(
@@ -202,21 +204,6 @@ class HomeActivity : AppCompatActivity() {
                     )
                 }
             startActivity(intent)
-        }
-    }
-
-    private fun invokeLocationAction() {
-        when {
-            isPermissionsGranted() -> startLocationUpdate()
-
-            else -> ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                PERMISSION_REQUEST_ACCESS_LOCATION
-            )
         }
     }
 
@@ -231,11 +218,14 @@ class HomeActivity : AppCompatActivity() {
         ActivityCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
+        ) == PackageManager.PERMISSION_GRANTED
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            PERMISSION_REQUEST_ACCESS_LOCATION
+        )
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -245,7 +235,17 @@ class HomeActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             PERMISSION_REQUEST_ACCESS_LOCATION -> {
-                invokeLocationAction()
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    if (isGPSEnabled) {
+                        startLocationUpdate()
+                    } else {
+                        GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
+                            override fun gpsStatus(isGPSEnabled: Boolean) {
+                                this@HomeActivity.isGPSEnabled = isGPSEnabled
+                            }
+                        })
+                    }
+                }
             }
         }
     }
