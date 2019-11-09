@@ -98,6 +98,9 @@ class NewTripActivity : AppCompatActivity() {
                     -1
                 )
             })
+            .setHeaderColor(R.color.colorPrimaryDark) // Color of the dialog header
+            .setSelectionColor(R.color.colorSecondaryLight) // Color of the selection circle
+            .setTodayLabelColor(R.color.colorSecondaryDark) // Color of the today number
 
         datePickerDialog.build().show()
     }

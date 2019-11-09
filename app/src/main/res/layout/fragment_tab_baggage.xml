@@ -27,6 +27,7 @@
                     android:layout_margin="8dp"
                     android:text="@string/tab_baggage_no_items_added"
                     android:textAlignment="center"
+                    android:textSize="16sp"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
