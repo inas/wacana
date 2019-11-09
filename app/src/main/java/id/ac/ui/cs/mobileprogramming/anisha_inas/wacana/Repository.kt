@@ -130,7 +130,8 @@ class Repository(application: Application) {
     }
 
     fun getAllTrip(): LiveData<List<TripEntity>> {
-        return tripDao.getAllTrip()
+        return Observable.fromCallable { tripDao.getAllTrip() }
+            .subscribeOn(Schedulers.io()).blockingSingle()
     }
 
     fun addTrip(trip: TripEntity) {
