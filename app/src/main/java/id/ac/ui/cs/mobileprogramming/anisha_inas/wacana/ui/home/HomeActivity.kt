@@ -103,7 +103,6 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             viewModel.selectTrip(-1)
         } else if (viewModel.selectedTrip == -1) {
@@ -242,6 +241,7 @@ class HomeActivity : AppCompatActivity() {
                         GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
                             override fun gpsStatus(isGPSEnabled: Boolean) {
                                 this@HomeActivity.isGPSEnabled = isGPSEnabled
+                                if (isGPSEnabled) startLocationUpdate()
                             }
                         })
                     }
