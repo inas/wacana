@@ -18,7 +18,6 @@ import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.db.entity.DocumentEntity
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.db.entity.ItemEntity
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.db.entity.TripEntity
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.preferences.AppPreference
-import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.newTrip.NewTripActivity
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.workers.NotificationWorker
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.workers.WeatherWorker
 import io.reactivex.Completable
@@ -147,7 +146,7 @@ class Repository(application: Application) {
     fun deleteTrip(trip: TripEntity) {
         Observable.fromCallable { tripDao.deleteTrip(trip) }.subscribeOn(Schedulers.io())
             .subscribe({
-                workManager.cancelAllWorkByTag(NewTripActivity.TRIP_NOTIFICATION + trip.id)
+                workManager.cancelAllWorkByTag(NotificationWorker.TRIP_NOTIFICATION + trip.id)
             })
     }
 
@@ -194,12 +193,13 @@ class Repository(application: Application) {
 
     private fun scheduleNotification(destination: String, startDate: Calendar, id: Long) {
         val inputData = Data.Builder().apply {
-            putString(NewTripActivity.DESTINATION, destination)
+            putString(NotificationWorker.DESTINATION, destination)
+            putLong(NotificationWorker.REMINDER_TIME, startDate.timeInMillis)
         }.build()
         val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInitialDelay(calculateDelay(startDate))
             .setInputData(inputData)
-            .addTag(NewTripActivity.TRIP_NOTIFICATION + id.toString())
+            .addTag(NotificationWorker.TRIP_NOTIFICATION + id.toString())
             .build()
 
         workManager.enqueue(notificationWork)

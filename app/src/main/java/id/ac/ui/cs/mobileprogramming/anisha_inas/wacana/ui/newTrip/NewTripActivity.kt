@@ -18,10 +18,6 @@ class NewTripActivity : AppCompatActivity() {
     lateinit var viewModel: NewTripViewModel
     lateinit var binding: ActivityNewTripBinding
 
-    companion object {
-        const val DESTINATION = "DESTINATION"
-        const val TRIP_NOTIFICATION = "TRIP_NOTIFICATION"
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_trip, null)

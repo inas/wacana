@@ -19,11 +19,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripDetail.TripDetailActivity"
@@ -33,6 +28,13 @@
         <activity
             android:name="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.newTrip.NewTripActivity"
             android:parentActivityName="id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.home.HomeActivity" />
+        <activity android:name=".ui.SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

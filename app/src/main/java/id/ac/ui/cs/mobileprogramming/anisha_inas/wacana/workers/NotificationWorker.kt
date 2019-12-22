@@ -13,7 +13,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.R
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.home.HomeActivity
-import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.newTrip.NewTripActivity.Companion.DESTINATION
 
 
 class NotificationWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
@@ -21,16 +20,21 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
 
     companion object {
         const val WACANA_NOTIFICATION_CHANNEL = "WACANA_NOTIFICATION_CHANNEL"
+        const val DESTINATION = "DESTINATION"
+        const val REMINDER_TIME = "REMINDER_TIME"
+        const val TRIP_NOTIFICATION = "TRIP_NOTIFICATION"
     }
 
     override fun doWork(): Result {
-        // Method to trigger an instant notification
-        createNotificationChannel()
-        createNotification(buildPendingIntent())
+        val reminderTime = inputData.getLong(REMINDER_TIME, System.currentTimeMillis())
+        if (reminderTime < System.currentTimeMillis()) {
+            // Method to trigger an instant notification
+            createNotificationChannel()
+            createNotification(buildPendingIntent())
+            return Result.success()
+        }
 
-        return Result.success()
-        // (Returning RETRY tells WorkManager to try this task again
-        // later; FAILURE says not to try again.)
+        return Result.failure()
     }
 
 
