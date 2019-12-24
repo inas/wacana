@@ -18,5 +18,6 @@ class SplashGLSurfaceView(context: Context, attrs: AttributeSet) : GLSurfaceView
 
         // Set the Renderer for drawing on the GLSurfaceView
         setRenderer(renderer)
+        renderMode = RENDERMODE_WHEN_DIRTY
     }
 }

@@ -15,10 +15,20 @@ class Square(val squareCoords: FloatArray, val color: FloatArray) {
         const val COORDS_PER_VERTEX = 3
     }
 
-    private val vertexShaderCode =
-        "attribute vec4 vPosition;" +
+    //    private val vertexShaderCode =
+//        "attribute vec4 vPosition;" +
+//                "void main() {" +
+//                "  gl_Position = vPosition;" +
+//                "}"
+    private val vertexShaderCode = // This matrix member variable provides a hook to manipulate
+        // the coordinates of the objects that use this vertex shader
+        "uniform mat4 uMVPMatrix;" +
+                "attribute vec4 vPosition;" +
                 "void main() {" +
-                "  gl_Position = vPosition;" +
+                // The matrix must be included as a modifier of gl_Position.
+                // Note that the uMVPMatrix factor *must be first* in order
+                // for the matrix multiplication product to be correct.
+                "  gl_Position = uMVPMatrix * vPosition;" +
                 "}"
 
     private val fragmentShaderCode =
@@ -54,8 +64,9 @@ class Square(val squareCoords: FloatArray, val color: FloatArray) {
         }
 
     private var mProgram = 0
-    private var positionHandle: Int = 0
+    private var mPositionHandle: Int = 0
     private var mColorHandle: Int = 0
+    private var mMVPMatrixHandle: Int = 0
 
     private val vertexCount: Int = squareCoords.size / COORDS_PER_VERTEX
     private val vertexStride: Int = COORDS_PER_VERTEX * 4 // 4 bytes per vertex
@@ -95,7 +106,7 @@ class Square(val squareCoords: FloatArray, val color: FloatArray) {
         GLES20.glUseProgram(mProgram)
 
         // get handle to vertex shader's vPosition member
-        positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition").also {
+        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition").also {
 
             // Enable a handle to the triangle vertices
             GLES20.glEnableVertexAttribArray(it)
@@ -124,4 +135,46 @@ class Square(val squareCoords: FloatArray, val color: FloatArray) {
             GLES20.glDisableVertexAttribArray(it)
         }
     }
+
+    fun draw(mvpMatrix: FloatArray) {
+        // Add program to OpenGL environment
+        GLES20.glUseProgram(mProgram)
+
+        // get handle to vertex shader's vPosition member
+        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition")
+
+        // Enable a handle to the triangle vertices
+        GLES20.glEnableVertexAttribArray(mPositionHandle)
+
+        // Prepare the triangle coordinate data
+        GLES20.glVertexAttribPointer(
+            mPositionHandle, COORDS_PER_VERTEX,
+            GLES20.GL_FLOAT, false,
+            vertexStride, vertexBuffer
+        )
+
+        // get handle to fragment shader's vColor member
+        mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor")
+
+        // Set color for drawing the triangle
+        GLES20.glUniform4fv(mColorHandle, 1, color, 0)
+
+        // get handle to shape's transformation matrix
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix")
+//        MyGLRenderer.checkGlError("glGetUniformLocation")
+
+        // Apply the projection and view transformation
+        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
+//        MyGLRenderer.checkGlError("glUniformMatrix4fv")
+
+        // Draw the square
+        GLES20.glDrawElements(
+            GLES20.GL_TRIANGLES, drawOrder.size,
+            GLES20.GL_UNSIGNED_SHORT, drawListBuffer
+        )
+
+        // Disable vertex array
+        GLES20.glDisableVertexAttribArray(mPositionHandle)
+    }
+
 }
