@@ -44,27 +44,9 @@ class SplashGLRenderer(val context: Context) : GLSurfaceView.Renderer {
     override fun onDrawFrame(unused: GL10) {
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
-        val scratch = FloatArray(16)
 
-        // Set the camera position (View matrix)
-        Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
-
-        // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0)
-
-        // Draw square
-        mSquare1.draw(mMVPMatrix)
-
-        // Create a rotation transformation for the triangle
-        val time = SystemClock.uptimeMillis() % 4000L
-        val angle = 0.090f * time.toInt()
-        Matrix.setRotateM(mRotationMatrix, 0, angle, 0f, 0f, -1.0f)
-
-        // Combine the rotation matrix with the projection and camera view
-        // Note that the vPMatrix factor *must be first* in order
-        // for the matrix multiplication product to be correct.
-        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0)
-        mSquare2.draw(scratch)
+        rotateSquare(mSquare1, -1)
+        rotateSquare(mSquare2, 1)
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
@@ -76,4 +58,24 @@ class SplashGLRenderer(val context: Context) : GLSurfaceView.Renderer {
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f)
     }
 
+    fun rotateSquare(square: Square, direction: Int) {
+        val scratch = FloatArray(16)
+
+        // Set the camera position (View matrix)
+        Matrix.setLookAtM(mViewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0)
+
+        // Create a rotation transformation for the triangle
+        val time = SystemClock.uptimeMillis() % 4000L
+        val angle = direction * 0.090f * time.toInt()
+        Matrix.setRotateM(mRotationMatrix, 0, angle, 0f, 0f, -1.0f)
+
+        // Combine the rotation matrix with the projection and camera view
+        // Note that the vPMatrix factor *must be first* in order
+        // for the matrix multiplication product to be correct.
+        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0)
+        square.draw(scratch)
+    }
 }
