@@ -211,10 +211,11 @@ class Repository(application: Application) {
             dueDate.apply {
                 set(Calendar.YEAR, it.get(Calendar.YEAR))
                 set(Calendar.MONTH, it.get(Calendar.MONTH))
-                set(Calendar.DAY_OF_MONTH, it.get(Calendar.DAY_OF_MONTH))
+                set(Calendar.DAY_OF_MONTH, it.get(Calendar.DAY_OF_MONTH) - 1)
                 set(Calendar.HOUR_OF_DAY, 12)
             }
         }
-        return Duration.ofMillis(dueDate.timeInMillis - System.currentTimeMillis())
+        val delay = Duration.ofMillis(dueDate.timeInMillis - System.currentTimeMillis())
+        return if (delay.isNegative) delay else Duration.ZERO
     }
 }

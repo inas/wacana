@@ -7,21 +7,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.location.LocationManager
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.R
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.Repository
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.databinding.ActivityHomeBinding
+import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.service.MusicService
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.newTrip.NewTripActivity
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripDetail.TripDetailActivity
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripDetail.TripDetailTabLayoutFragment
@@ -73,12 +71,12 @@ class HomeActivity : AppCompatActivity() {
         viewModel.weather.observe(this, Observer {
             viewModel.updateWeather(it)
             if (it.main?.temp == null || it.name == null || it.weather[0].main == null) {
-                trip_list_layout_weather.visibility = View.GONE
+                binding.tripListLayoutWeather.visibility = View.GONE
             } else {
-                trip_list_layout_weather.visibility = View.VISIBLE
-                trip_list_text_view_location.text = viewModel.locationName
-                trip_list_text_view_temperature.text = viewModel.temperature
-                trip_list_text_view_weather.text = viewModel.weatherDescription
+                binding.tripListLayoutWeather.visibility = View.VISIBLE
+                binding.tripListTextViewLocation.text = viewModel.locationName
+                binding.tripListTextViewTemperature.text = viewModel.temperature
+                binding.tripListTextViewWeather.text = viewModel.weatherDescription
             }
         })
 
@@ -99,14 +97,17 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         registerReceiver(gpsReceiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
-    }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            viewModel.selectTrip(-1)
-        } else if (viewModel.selectedTrip == -1) {
-            viewModel.selectTrip(viewModel.tripItemViewModelList.size - 1)
+        binding.mainButtonPlay.setOnClickListener {
+            startService(Intent(this, MusicService::class.java))
+            it.visibility = View.INVISIBLE
+            binding.mainButtonPause.visibility = View.VISIBLE
+        }
+
+        binding.mainButtonPause.setOnClickListener {
+            stopService(Intent(this, MusicService::class.java))
+            it.visibility = View.INVISIBLE
+            binding.mainButtonPlay.visibility = View.VISIBLE
         }
     }
 
@@ -125,10 +126,15 @@ class HomeActivity : AppCompatActivity() {
         unregisterReceiver(gpsReceiver)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        stopService(Intent(this, MusicService::class.java))
+    }
+
     private fun initViews() {
         setupRecyclerView()
 
-        button_add_trip.setOnClickListener {
+        binding.buttonAddTrip.setOnClickListener {
             val intent = Intent(this@HomeActivity, NewTripActivity::class.java)
             startActivity(intent)
         }
@@ -139,15 +145,6 @@ class HomeActivity : AppCompatActivity() {
                     tripDataList
                 ).reversed()
             )
-            if (twoPane) {
-                if (tripDataList.isEmpty()) {
-                    supportFragmentManager.findFragmentById(R.id.trip_detail_container)?.let {
-                        supportFragmentManager.beginTransaction().remove(it).commit()
-                    }
-                }
-                viewModel.selectTrip(viewModel.tripItemViewModelList.size - 1)
-                selectFirstItem(Handler(), item_list)
-            }
         })
 
     }
@@ -167,43 +164,16 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
-    private fun selectFirstItem(handler: Handler, recyclerView: RecyclerView) {
-        handler.post {
-            if (!recyclerView.isComputingLayout) {
-                recyclerView.findViewHolderForLayoutPosition(0)
-                    ?.let { it as TripRecyclerViewAdapter.ViewHolder }
-                    ?.itemView?.performClick()
-            } else {
-                selectFirstItem(handler, recyclerView)
-            }
-        }
-    }
-
     private fun openTripDetail(tripIndex: Int) {
-        if (twoPane) {
-            val fragment = TripDetailTabLayoutFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(
-                        TripDetailTabLayoutFragment.ARG_TRIP_ID,
-                        this@HomeActivity.viewModel.tripItemViewModelList[tripIndex].tripEntity
-                    )
-                }
+        viewModel.selectTrip(-1)
+        val intent =
+            Intent(this@HomeActivity, TripDetailActivity::class.java).apply {
+                putExtra(
+                    TripDetailTabLayoutFragment.ARG_TRIP_ID,
+                    viewModel.tripItemViewModelList[tripIndex].tripEntity
+                )
             }
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.trip_detail_container, fragment)
-                .commit()
-        } else {
-            viewModel.selectTrip(-1)
-            val intent =
-                Intent(this@HomeActivity, TripDetailActivity::class.java).apply {
-                    putExtra(
-                        TripDetailTabLayoutFragment.ARG_TRIP_ID,
-                        viewModel.tripItemViewModelList[tripIndex].tripEntity
-                    )
-                }
-            startActivity(intent)
-        }
+        startActivity(intent)
     }
 
     private fun startLocationUpdate() {

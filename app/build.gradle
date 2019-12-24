@@ -70,7 +70,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
 
     // DateUtils
-    implementation  'org.apache.commons:commons-lang3:3.5'
+    implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.leavjenn.smoothdaterangepicker:library:0.2.0'
 
     // Glide
