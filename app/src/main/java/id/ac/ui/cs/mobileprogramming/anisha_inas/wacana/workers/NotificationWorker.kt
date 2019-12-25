@@ -15,19 +15,20 @@ import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.R
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.home.HomeActivity
 
 
-class NotificationWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
+class NotificationWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
 
     companion object {
         const val WACANA_NOTIFICATION_CHANNEL = "WACANA_NOTIFICATION_CHANNEL"
         const val DESTINATION = "DESTINATION"
-        const val REMINDER_TIME = "REMINDER_TIME"
+        const val EVENT_TIME = "EVENT_TIME"
         const val TRIP_NOTIFICATION = "TRIP_NOTIFICATION"
     }
 
     override fun doWork(): Result {
-        val reminderTime = inputData.getLong(REMINDER_TIME, System.currentTimeMillis())
-        if (reminderTime < System.currentTimeMillis()) {
+        val eventTime = inputData.getLong(EVENT_TIME, System.currentTimeMillis())
+        val current = System.currentTimeMillis()
+        if (eventTime > current) {
             // Method to trigger an instant notification
             createNotificationChannel()
             createNotification(buildPendingIntent())
@@ -69,9 +70,12 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
         //get latest event details
         val destination = inputData.getString(DESTINATION)
         val notificationTitle =
-            if (destination != null && destination.isNotEmpty()) "Get ready for your trip to " + destination + "!" else
-                "Get ready for your trip!"
-        val notificationText = "Start packing now"
+            if (destination != null && destination.isNotEmpty()) context.getString(
+                R.string.notification_title,
+                destination
+            ) else
+                context.getString(R.string.notification_title_alternative)
+        val notificationText = context.getString(R.string.notification_body)
 
         //build the notification
         val notificationBuilder =

@@ -136,22 +136,18 @@ class Repository(application: Application) {
     fun addTrip(trip: TripEntity) {
         Observable.fromCallable { tripDao.insert(trip) }
             .subscribeOn(Schedulers.io())
-            .subscribe({ id ->
+            .subscribe { id ->
                 tripDao.getTripById(id).let {
                     scheduleNotification(it.destination, it.startDate, id)
                 }
-            })
+            }
     }
 
     fun deleteTrip(trip: TripEntity) {
         Observable.fromCallable { tripDao.deleteTrip(trip) }.subscribeOn(Schedulers.io())
-            .subscribe({
+            .subscribe {
                 workManager.cancelAllWorkByTag(NotificationWorker.TRIP_NOTIFICATION + trip.id)
-            })
-    }
-
-    fun clearTrip() {
-        Observable.fromCallable { tripDao.deleteAll() }.subscribeOn(Schedulers.io()).subscribe()
+            }
     }
 
     fun getAllDocuments(tripId: Long): LiveData<List<DocumentEntity>> {
@@ -192,10 +188,14 @@ class Repository(application: Application) {
     }
 
     private fun scheduleNotification(destination: String, startDate: Calendar, id: Long) {
+        startDate.set(Calendar.HOUR_OF_DAY, 0)
+        startDate.set(Calendar.MINUTE, 0)
+
         val inputData = Data.Builder().apply {
             putString(NotificationWorker.DESTINATION, destination)
-            putLong(NotificationWorker.REMINDER_TIME, startDate.timeInMillis)
+            putLong(NotificationWorker.EVENT_TIME, startDate.timeInMillis)
         }.build()
+
         val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInitialDelay(calculateDelay(startDate))
             .setInputData(inputData)
@@ -206,16 +206,9 @@ class Repository(application: Application) {
     }
 
     private fun calculateDelay(date: Calendar): Duration {
-        val dueDate = Calendar.getInstance()
-        date.let {
-            dueDate.apply {
-                set(Calendar.YEAR, it.get(Calendar.YEAR))
-                set(Calendar.MONTH, it.get(Calendar.MONTH))
-                set(Calendar.DAY_OF_MONTH, it.get(Calendar.DAY_OF_MONTH) - 1)
-                set(Calendar.HOUR_OF_DAY, 12)
-            }
-        }
-        val delay = Duration.ofMillis(dueDate.timeInMillis - System.currentTimeMillis())
-        return if (delay.isNegative) delay else Duration.ZERO
+        date.set(Calendar.DAY_OF_MONTH, date.get(Calendar.DAY_OF_MONTH) - 1)
+        return if (date.timeInMillis < System.currentTimeMillis()) Duration.ZERO else Duration.ofMillis(
+            date.timeInMillis
+        )
     }
 }

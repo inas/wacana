@@ -16,4 +16,7 @@
     <string name="trip_list_add_new_trip">Tambah Perjalanan</string>
     <string name="tab_document_title">dokumen</string>
     <string name="tab_baggage_title">bagasi</string>
+    <string name="notification_body">Mulai packing sekarang</string>
+    <string name="notification_title">Siap-siap buat ke %1$s!</string>
+    <string name="notification_title_alternative">Siap-siap buat perjalananmu!</string>
 </resources>

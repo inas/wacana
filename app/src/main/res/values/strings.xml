@@ -17,4 +17,7 @@
     <string name="tab_document_add_document">Add document</string>
     <string name="trip_list_add_new_trip">Add New Trip</string>
     <string name="common_date_format_dd_mmm_yyyy" translatable="false">dd MMM yyyy</string>
+    <string name="notification_title">Get ready for your trip to %1$s!</string>
+    <string name="notification_title_alternative">Get ready for your trip!</string>
+    <string name="notification_body">Start packing now</string>
 </resources>
