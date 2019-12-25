@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -50,16 +52,22 @@ class HomeActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        if (!isPermissionsGranted()) {
+        if (!isPermissionGranted()) {
             requestPermission()
         } else {
             turnGPSOn()
         }
-
     }
 
     override fun onStart() {
         super.onStart()
+        if (isPermissionGranted() && isGPSEnabled && !isNetworkAvailable()) {
+            val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
+            if (!wifiManager.isWifiEnabled) {
+                wifiManager.isWifiEnabled = true
+            }
+        }
+
         initViews()
 
         viewModel.weather.observe(this, Observer {
@@ -118,6 +126,13 @@ class HomeActivity : AppCompatActivity() {
         stopService(Intent(this, MusicService::class.java))
     }
 
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected
+    }
+
     private fun initViews() {
         setupRecyclerView()
 
@@ -163,7 +178,7 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun isPermissionsGranted() =
+    private fun isPermissionGranted() =
         ActivityCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -211,9 +226,7 @@ class HomeActivity : AppCompatActivity() {
                         alertBuilder.setCancelable(true)
                         alertBuilder.setTitle("Are you sure?")
                         alertBuilder.setMessage("If you deny this permission app won't be able to show local weather")
-                        alertBuilder.setPositiveButton(
-                            "Allow"
-                        ) { _, _ ->
+                        alertBuilder.setPositiveButton("Allow") { _, _ ->
                             requestPermission()
                         }
                         alertBuilder.setNegativeButton("Deny") { _, _ -> }
