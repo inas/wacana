@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -28,6 +29,7 @@ import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripDetail.TripDetail
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripList.TripRecyclerViewAdapter
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.util.GpsUtil
 import kotlinx.android.synthetic.main.trip_list.*
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -203,6 +205,21 @@ class HomeActivity : AppCompatActivity() {
             PERMISSION_REQUEST_ACCESS_LOCATION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     turnGPSOn()
+                } else {
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        val alertBuilder = AlertDialog.Builder(this)
+                        alertBuilder.setCancelable(true)
+                        alertBuilder.setTitle("Are you sure?")
+                        alertBuilder.setMessage("If you deny this permission app won't be able to show local weather")
+                        alertBuilder.setPositiveButton(
+                            "Allow"
+                        ) { _, _ ->
+                            requestPermission()
+                        }
+                        alertBuilder.setNegativeButton("Deny") { _, _ -> }
+                        val alert = alertBuilder.create()
+                        alert.show()
+                    }
                 }
             }
         }
