@@ -20,6 +20,8 @@ import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.R
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.Repository
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.databinding.ActivityHomeBinding
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.service.MusicService
+import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.service.MusicService.Companion.ACTION_PAUSE
+import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.service.MusicService.Companion.ACTION_PLAY
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.newTrip.NewTripActivity
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripDetail.TripDetailActivity
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.tripDetail.TripDetailTabLayoutFragment
@@ -99,13 +101,13 @@ class HomeActivity : AppCompatActivity() {
         registerReceiver(gpsReceiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
 
         binding.mainButtonPlay.setOnClickListener {
-            startService(Intent(this, MusicService::class.java))
+            startService(Intent(this, MusicService::class.java).apply { action = ACTION_PLAY })
             it.visibility = View.INVISIBLE
             binding.mainButtonPause.visibility = View.VISIBLE
         }
 
         binding.mainButtonPause.setOnClickListener {
-            stopService(Intent(this, MusicService::class.java))
+            startService(Intent(this, MusicService::class.java).apply { action = ACTION_PAUSE })
             it.visibility = View.INVISIBLE
             binding.mainButtonPlay.visibility = View.VISIBLE
         }
