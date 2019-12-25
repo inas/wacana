@@ -35,7 +35,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var gpsReceiver: BroadcastReceiver
 
-    private var twoPane: Boolean = false
     private var isGPSEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,25 +48,16 @@ class HomeActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        if (savedInstanceState == null) {
-            if (!isPermissionsGranted()) {
-                requestPermission()
-            } else {
-                GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
-                    override fun gpsStatus(isGPSEnabled: Boolean) {
-                        this@HomeActivity.isGPSEnabled = isGPSEnabled
-                    }
-                })
-            }
+        if (!isPermissionsGranted()) {
+            requestPermission()
+        } else {
+            turnGPSOn()
         }
+
     }
 
     override fun onStart() {
         super.onStart()
-        if (isPermissionsGranted() && isGPSEnabled) startLocationUpdate()
-
-        twoPane = trip_detail_container != null
-
         initViews()
 
         viewModel.weather.observe(this, Observer {
@@ -88,16 +78,13 @@ class HomeActivity : AppCompatActivity() {
                     if (it.matches(LocationManager.PROVIDERS_CHANGED_ACTION.toRegex())) {
                         val locationManager =
                             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                            isGPSEnabled = true
-                            if (isPermissionsGranted()) startLocationUpdate()
-                        } else {
-                            isGPSEnabled = false
-                        }
+                        isGPSEnabled =
+                            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                     }
                 }
             }
         }
+
         registerReceiver(gpsReceiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
 
         binding.mainButtonPlay.setOnClickListener {
@@ -115,11 +102,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == GPS_REQUEST) {
-                startLocationUpdate()
-            }
-        }
+        if (resultCode == Activity.RESULT_OK && requestCode == GPS_REQUEST) turnGPSOn()
     }
 
     override fun onStop() {
@@ -178,13 +161,6 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun startLocationUpdate() {
-        viewModel.locationData.observe(this, Observer {
-            viewModel.saveLocationCoordinates(it.latitude, it.longitude)
-            viewModel.getCurrentWeather(it.latitude, it.longitude)
-        })
-    }
-
     private fun isPermissionsGranted() =
         ActivityCompat.checkSelfPermission(
             this,
@@ -198,6 +174,25 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
+    private fun turnGPSOn() {
+        GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
+            override fun gpsStatus(isGPSEnabled: Boolean) {
+                this@HomeActivity.isGPSEnabled = isGPSEnabled
+                if (isGPSEnabled) {
+                    viewModel.initLocationData()
+                    startLocationUpdate()
+                }
+            }
+        })
+    }
+
+    private fun startLocationUpdate() {
+        viewModel.locationData.observe(this, Observer {
+            viewModel.saveLocationCoordinates(it.latitude, it.longitude)
+            viewModel.getCurrentWeather(it.latitude, it.longitude)
+        })
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -207,16 +202,7 @@ class HomeActivity : AppCompatActivity() {
         when (requestCode) {
             PERMISSION_REQUEST_ACCESS_LOCATION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    if (isGPSEnabled) {
-                        startLocationUpdate()
-                    } else {
-                        GpsUtil(this).turnGPSOn(object : GpsUtil.OnGpsListener {
-                            override fun gpsStatus(isGPSEnabled: Boolean) {
-                                this@HomeActivity.isGPSEnabled = isGPSEnabled
-                                if (isGPSEnabled) startLocationUpdate()
-                            }
-                        })
-                    }
+                    turnGPSOn()
                 }
             }
         }

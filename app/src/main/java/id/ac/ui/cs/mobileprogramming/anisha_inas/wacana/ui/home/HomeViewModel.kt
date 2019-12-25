@@ -35,6 +35,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun initLocationData() {
+        locationData = LocationLiveData(getApplication())
+    }
+
     fun getTripItemVMList(tripEntityList: List<TripEntity>): List<TripItemViewModel> {
         tripItemViewModelList = tripEntityList.map {
             TripItemViewModel().apply {

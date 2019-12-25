@@ -42,9 +42,7 @@ class LocationLiveData(context: Context) : LiveData<LocationModel>() {
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
             locationResult ?: return
-            for (location in locationResult.locations) {
-                setLocationData(location)
-            }
+            setLocationData(locationResult.lastLocation)
         }
     }
 

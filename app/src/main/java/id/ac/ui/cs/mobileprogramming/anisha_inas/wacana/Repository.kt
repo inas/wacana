@@ -61,8 +61,7 @@ class Repository(application: Application) {
         tripDao = db.tripDao()
         documentDao = db.documentDao()
         itemDao = db.itemDao()
-        weatherService =
-            RetrofitRequest.getWeatherRetrofitInstance().create(WeatherService::class.java)
+        weatherService = RetrofitRequest.weatherRetrofitInstance.create(WeatherService::class.java)
         weather = MutableLiveData()
         sharedPreference = AppPreference.getInstance(application)
         workManager = WorkManager.getInstance(application)
