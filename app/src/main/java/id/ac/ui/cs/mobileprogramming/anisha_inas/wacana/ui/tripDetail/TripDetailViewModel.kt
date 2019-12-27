@@ -29,7 +29,6 @@ class TripDetailViewModel(application: Application) : AndroidViewModel(applicati
                         .resources.getString(R.string.common_date_format_dd_mmm_yyyy)
                 ).format(trip.endDate.time)
 
-        date = startDate + (if (endDate != null) " - $endDate" else "")
         date = getTripDateString(startDate, endDate)
     }
 

@@ -29,7 +29,6 @@ class NotificationWorker(val context: Context, params: WorkerParameters) : Worke
         val eventTime = inputData.getLong(EVENT_TIME, System.currentTimeMillis())
         val current = System.currentTimeMillis()
         if (eventTime > current) {
-            // Method to trigger an instant notification
             createNotificationChannel()
             createNotification(buildPendingIntent())
             return Result.success()
@@ -52,7 +51,6 @@ class NotificationWorker(val context: Context, params: WorkerParameters) : Worke
                 "A channel which shows notifications to remind user about upcoming trip"
             channel.description = description
 
-            // Register the channel with the system
             val notificationManager =
                 applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
@@ -67,7 +65,6 @@ class NotificationWorker(val context: Context, params: WorkerParameters) : Worke
     }
 
     private fun createNotification(intent: PendingIntent) {
-        //get latest event details
         val destination = inputData.getString(DESTINATION)
         val notificationTitle =
             if (destination != null && destination.isNotEmpty()) context.getString(
@@ -77,7 +74,6 @@ class NotificationWorker(val context: Context, params: WorkerParameters) : Worke
                 context.getString(R.string.notification_title_alternative)
         val notificationText = context.getString(R.string.notification_body)
 
-        //build the notification
         val notificationBuilder =
             NotificationCompat.Builder(applicationContext, WACANA_NOTIFICATION_CHANNEL)
                 .setSmallIcon(R.drawable.ic_notification_24dp)
@@ -87,11 +83,8 @@ class NotificationWorker(val context: Context, params: WorkerParameters) : Worke
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-        //trigger the notification
         val notificationManager = NotificationManagerCompat.from(applicationContext)
 
-        //we give each notification the ID of the event it's describing,
-        //to ensure they all show up and there are no duplicates
         notificationManager.notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
     }
 }

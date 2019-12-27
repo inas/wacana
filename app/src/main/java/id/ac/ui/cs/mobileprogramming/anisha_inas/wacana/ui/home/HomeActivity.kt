@@ -61,12 +61,6 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (isPermissionGranted() && isGPSEnabled && !isNetworkAvailable()) {
-            val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
-            if (!wifiManager.isWifiEnabled) {
-                wifiManager.isWifiEnabled = true
-            }
-        }
 
         initViews()
 
@@ -198,6 +192,12 @@ class HomeActivity : AppCompatActivity() {
                 if (isGPSEnabled) {
                     viewModel.initLocationData()
                     startLocationUpdate()
+                    if (!isNetworkAvailable()) {
+                        val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
+                        if (!wifiManager.isWifiEnabled) {
+                            wifiManager.isWifiEnabled = true
+                        }
+                    }
                 }
             }
         })

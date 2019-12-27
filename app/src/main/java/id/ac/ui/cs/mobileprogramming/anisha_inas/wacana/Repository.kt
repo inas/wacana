@@ -210,9 +210,7 @@ class Repository(application: Application) {
 
     private fun calculateDelay(date: Calendar): Duration {
         date.set(Calendar.DAY_OF_MONTH, date.get(Calendar.DAY_OF_MONTH) - 1)
-        val now = System.currentTimeMillis()
-        val notif = date.timeInMillis
-        val delay = notif - now
+        val delay = date.timeInMillis - System.currentTimeMillis()
         return if (delay < 0) Duration.ZERO else Duration.ofMillis(delay)
     }
 }

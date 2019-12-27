@@ -21,7 +21,6 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener {
         private const val STATE_NOT_STARTED: String = "STATE_NOT_STARTED"
     }
 
-    //creating a mediaplayer object
     private var mPlayer: MediaPlayer? = null
     private var mState: String = STATE_NOT_STARTED
     private var mCurrentPosition: Int = 0
