@@ -7,10 +7,6 @@ import android.os.IBinder
 import androidx.annotation.Nullable
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.R
 
-/**
- * Created by Belal on 12/30/2016.
- */
-
 class MusicService : Service(), MediaPlayer.OnPreparedListener {
 
     companion object {

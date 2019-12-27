@@ -17,7 +17,6 @@ import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.ui.home.HomeActivity
 
 class NotificationWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
-
     companion object {
         const val WACANA_NOTIFICATION_CHANNEL = "WACANA_NOTIFICATION_CHANNEL"
         const val DESTINATION = "DESTINATION"

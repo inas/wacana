@@ -15,7 +15,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private lateinit var repository: Repository
 
-    var selectedTrip: Int = -1
     var tripItemViewModelList: List<TripItemViewModel> = mutableListOf()
     var tripEntity: LiveData<List<TripEntity>> =
         Repository.getInstance(getApplication()).getAllTrip()
@@ -52,19 +51,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         getApplication<Application>().resources
                             .getString(R.string.common_date_format_dd_mmm_yyyy)
                     ).format(it.endDate.time)
-                isSelected.value = false
                 tripEntity = it
             }
         }
         return tripItemViewModelList
-    }
-
-    fun selectTrip(newTripIndex: Int) {
-        if (selectedTrip >= 0 && selectedTrip < tripItemViewModelList.size)
-            tripItemViewModelList[selectedTrip].isSelected.value = false
-        selectedTrip = newTripIndex
-        if (newTripIndex >= 0 && newTripIndex < tripItemViewModelList.size)
-            tripItemViewModelList[newTripIndex].isSelected.value = true
     }
 
     fun saveLocationCoordinates(lat: Double, lon: Double) {
@@ -79,12 +69,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         locationName = response.name ?: ""
         weatherDescription = response.weather[0].main ?: ""
         temperature = String.format("%.1f°C", ((response.main?.temp ?: 273.15f) - 273.15f))
-    }
-
-    fun deleteSelectedTrip() {
-        if (selectedTrip != -1) tripEntity.value?.get(selectedTrip)?.let {
-            repository.deleteTrip(it)
-        }
     }
 
 }

@@ -44,24 +44,20 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home, null)
-        setSupportActionBar(binding.homeToolbar)
         binding.homeToolbar.title = title
+        setSupportActionBar(binding.homeToolbar)
+
 
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         viewModel.initViewModel()
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        if (!isPermissionGranted()) {
-            requestPermission()
-        } else {
-            turnGPSOn()
-        }
+        if (!isPermissionGranted()) requestPermission() else turnGPSOn()
     }
 
     override fun onStart() {
         super.onStart()
-
         initViews()
 
         viewModel.weather.observe(this, Observer {
@@ -74,6 +70,14 @@ class HomeActivity : AppCompatActivity() {
                 binding.tripListTextViewTemperature.text = viewModel.temperature
                 binding.tripListTextViewWeather.text = viewModel.weatherDescription
             }
+        })
+
+        viewModel.tripEntity.observe(this, androidx.lifecycle.Observer { tripDataList ->
+            (item_list.adapter as TripRecyclerViewAdapter).updateList(
+                viewModel.getTripItemVMList(
+                    tripDataList
+                ).reversed()
+            )
         })
 
         gpsReceiver = object : BroadcastReceiver() {
@@ -90,23 +94,6 @@ class HomeActivity : AppCompatActivity() {
         }
 
         registerReceiver(gpsReceiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
-
-        binding.mainButtonPlay.setOnClickListener {
-            startService(Intent(this, MusicService::class.java).apply { action = ACTION_PLAY })
-            it.visibility = View.INVISIBLE
-            binding.mainButtonPause.visibility = View.VISIBLE
-        }
-
-        binding.mainButtonPause.setOnClickListener {
-            startService(Intent(this, MusicService::class.java).apply { action = ACTION_PAUSE })
-            it.visibility = View.INVISIBLE
-            binding.mainButtonPlay.visibility = View.VISIBLE
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == GPS_REQUEST) turnGPSOn()
     }
 
     override fun onStop() {
@@ -118,6 +105,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopService(Intent(this, MusicService::class.java))
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == GPS_REQUEST) turnGPSOn()
     }
 
     private fun isNetworkAvailable(): Boolean {
@@ -135,53 +127,35 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        viewModel.tripEntity.observe(this, androidx.lifecycle.Observer { tripDataList ->
-            (item_list.adapter as TripRecyclerViewAdapter).updateList(
-                viewModel.getTripItemVMList(
-                    tripDataList
-                ).reversed()
-            )
-        })
+        binding.mainButtonPlay.setOnClickListener {
+            startService(Intent(this, MusicService::class.java).apply { action = ACTION_PLAY })
+            it.visibility = View.INVISIBLE
+            binding.mainButtonPause.visibility = View.VISIBLE
+        }
 
+        binding.mainButtonPause.setOnClickListener {
+            startService(Intent(this, MusicService::class.java).apply { action = ACTION_PAUSE })
+            it.visibility = View.INVISIBLE
+            binding.mainButtonPlay.visibility = View.VISIBLE
+        }
     }
 
     private fun setupRecyclerView() {
         item_list.adapter = TripRecyclerViewAdapter(
-            this,
-            this,
             mutableListOf(),
             object : TripRecyclerViewAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
                     val index = viewModel.tripItemViewModelList.size - position - 1
-                    viewModel.selectTrip(index)
-                    openTripDetail(index)
+                    val intent =
+                        Intent(this@HomeActivity, TripDetailActivity::class.java).apply {
+                            putExtra(
+                                TripDetailTabLayoutFragment.ARG_TRIP_ID,
+                                viewModel.tripItemViewModelList[index].tripEntity
+                            )
+                        }
+                    startActivity(intent)
                 }
             }
-        )
-    }
-
-    private fun openTripDetail(tripIndex: Int) {
-        viewModel.selectTrip(-1)
-        val intent =
-            Intent(this@HomeActivity, TripDetailActivity::class.java).apply {
-                putExtra(
-                    TripDetailTabLayoutFragment.ARG_TRIP_ID,
-                    viewModel.tripItemViewModelList[tripIndex].tripEntity
-                )
-            }
-        startActivity(intent)
-    }
-
-    private fun isPermissionGranted() =
-        ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-    private fun requestPermission() {
-        ActivityCompat.requestPermissions(
-            this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            PERMISSION_REQUEST_ACCESS_LOCATION
         )
     }
 
@@ -208,6 +182,19 @@ class HomeActivity : AppCompatActivity() {
             viewModel.saveLocationCoordinates(it.latitude, it.longitude)
             viewModel.getCurrentWeather(it.latitude, it.longitude)
         })
+    }
+
+    private fun isPermissionGranted() =
+        ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            PERMISSION_REQUEST_ACCESS_LOCATION
+        )
     }
 
     override fun onRequestPermissionsResult(
@@ -237,7 +224,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
-
     companion object {
         const val GPS_REQUEST = 101
         private const val PERMISSION_REQUEST_ACCESS_LOCATION = 1989

@@ -13,10 +13,10 @@ Java_id_ac_ui_cs_mobileprogramming_anisha_1inas_wacana_ui_tripDetail_TripDetailV
     const char *fS = env->GetStringUTFChars(firstString, NULL);
     const char *sS = env->GetStringUTFChars(secondString, NULL);
 
-    strcpy(returnString, fS); // copy string one into the result.
+    strcpy(returnString, fS);
     if (strlen(sS) > 0) {
         strcat(returnString, " - ");
-        strcat(returnString, sS); // append string two to the result.
+        strcat(returnString, sS);
     }
 
     env->ReleaseStringUTFChars(firstString, fS);
