@@ -78,59 +78,6 @@ class Repository(application: Application) {
         sharedPreference.saveLocationCoordinates(lat, lon)
     }
 
-    fun getCurrentWeather(lat: String, lon: String) {
-        weatherService.getCurrentWeather(lat, lon, getApiKey())
-            .enqueue(object : Callback<WeatherResponse> {
-                override fun onResponse(
-                    call: Call<WeatherResponse>,
-                    response: Response<WeatherResponse>
-                ) {
-
-                    response.body()?.let {
-                        weather.value = response.body()
-                        weather.value?.let {
-                            with(sharedPreference) {
-                                saveLocation(it.name)
-                                saveWeather(it.weather[0].main)
-                                saveTemperature(it.main?.temp.toString())
-                            }
-                        }
-
-                    }
-                }
-
-                override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                    queueGetWeatherCall(lat, lon)
-
-                    sharedPreference.let {
-                        weather.value = WeatherResponse().apply {
-                            name = it.location
-                            main = Main().apply { temp = it.temperature?.toFloat() }
-                            weather = mutableListOf(Weather().apply {
-                                main = it.weather
-                            }) as ArrayList<Weather>
-                        }
-                    }
-                }
-            })
-    }
-
-    private fun queueGetWeatherCall(lat: String, lon: String) {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val job = OneTimeWorkRequest.Builder(WeatherWorker::class.java).apply {
-            val data = Data.Builder()
-            data.putString(LONGITUDE, lon)
-            data.putString(LATITUDE, lat)
-            setInputData(data.build())
-            addTag(WEATHER_JOB)
-        }.setConstraints(constraints).build()
-
-        workManager.beginUniqueWork(WEATHER_JOB, ExistingWorkPolicy.REPLACE, job).enqueue()
-    }
-
     fun getAllTrip(): LiveData<List<TripEntity>> {
         return Observable.fromCallable { tripDao.getAllTrip() }
             .subscribeOn(Schedulers.io()).blockingSingle()
@@ -188,6 +135,59 @@ class Repository(application: Application) {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe()
+    }
+
+    fun getCurrentWeather(lat: String, lon: String) {
+        weatherService.getCurrentWeather(lat, lon, getApiKey())
+            .enqueue(object : Callback<WeatherResponse> {
+                override fun onResponse(
+                    call: Call<WeatherResponse>,
+                    response: Response<WeatherResponse>
+                ) {
+
+                    response.body()?.let {
+                        weather.value = response.body()
+                        weather.value?.let {
+                            with(sharedPreference) {
+                                saveLocation(it.name)
+                                saveWeather(it.weather[0].main)
+                                saveTemperature(it.main?.temp.toString())
+                            }
+                        }
+
+                    }
+                }
+
+                override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+                    queueGetWeatherCall(lat, lon)
+
+                    sharedPreference.let {
+                        weather.value = WeatherResponse().apply {
+                            name = it.location
+                            main = Main().apply { temp = it.temperature?.toFloat() }
+                            weather = mutableListOf(Weather().apply {
+                                main = it.weather
+                            }) as ArrayList<Weather>
+                        }
+                    }
+                }
+            })
+    }
+
+    private fun queueGetWeatherCall(lat: String, lon: String) {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val job = OneTimeWorkRequest.Builder(WeatherWorker::class.java).apply {
+            val data = Data.Builder()
+            data.putString(LONGITUDE, lon)
+            data.putString(LATITUDE, lat)
+            setInputData(data.build())
+            addTag(WEATHER_JOB)
+        }.setConstraints(constraints).build()
+
+        workManager.beginUniqueWork(WEATHER_JOB, ExistingWorkPolicy.REPLACE, job).enqueue()
     }
 
     private fun scheduleNotification(destination: String, startDate: Calendar, id: Long) {
