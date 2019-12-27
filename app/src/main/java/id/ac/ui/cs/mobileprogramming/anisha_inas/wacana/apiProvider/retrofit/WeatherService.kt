@@ -6,9 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface WeatherService {
-    companion object {
-        const val API_KEY = "0d41bfc96c89d3302775ec6fa537e07e"
-    }
 
     @GET("data/2.5/weather?")
     fun getCurrentWeather(

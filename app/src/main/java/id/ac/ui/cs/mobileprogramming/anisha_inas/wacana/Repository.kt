@@ -9,7 +9,6 @@ import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.apiProvider.response.Wea
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.apiProvider.response.WeatherResponse
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.apiProvider.retrofit.RetrofitRequest
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.apiProvider.retrofit.WeatherService
-import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.apiProvider.retrofit.WeatherService.Companion.API_KEY
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.db.AppDatabase
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.db.dao.DocumentDao
 import id.ac.ui.cs.mobileprogramming.anisha_inas.wacana.db.dao.ItemDao
@@ -34,6 +33,7 @@ import java.util.*
 class Repository(application: Application) {
 
     companion object {
+
         const val LONGITUDE = "LONGITUDE"
         const val LATITUDE = "LATITUDE"
         const val WEATHER_JOB = "WEATHER_JOB"
@@ -57,6 +57,8 @@ class Repository(application: Application) {
     var workManager: WorkManager
 
     init {
+        System.loadLibrary("native-lib")
+
         val db = AppDatabase.getDatabase(application)
         tripDao = db.tripDao()
         documentDao = db.documentDao()
@@ -67,6 +69,8 @@ class Repository(application: Application) {
         workManager = WorkManager.getInstance(application)
     }
 
+    external fun getApiKey(): String
+
     fun getLatitude() = sharedPreference.latitude
     fun getLongitude() = sharedPreference.longitude
 
@@ -75,7 +79,7 @@ class Repository(application: Application) {
     }
 
     fun getCurrentWeather(lat: String, lon: String) {
-        weatherService.getCurrentWeather(lat, lon, API_KEY)
+        weatherService.getCurrentWeather(lat, lon, getApiKey())
             .enqueue(object : Callback<WeatherResponse> {
                 override fun onResponse(
                     call: Call<WeatherResponse>,
